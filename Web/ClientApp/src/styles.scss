@@ -34,3 +34,9 @@ $gutter: 1rem; //for primeflex grid system
     background-color: var(--highlight-bg);
     color: var(--highlight-text-color)
 }
+
+
+//For list page active icon color from primary
+.active-icon{
+    color: var(--primary-color);
+}

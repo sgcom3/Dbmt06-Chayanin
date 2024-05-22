@@ -4,12 +4,11 @@ import { CommonModule } from "@angular/common";
 import { SharedModule } from "@app/shared/shared.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DbRoutingModule } from "./db-routing.module";
+import { LazyTranslationService } from "@app/core/services/lazy-translation.service";
 import { ListGroupDetailComponent } from './dbmt04/list-group-detail/list-group-detail.component';
 import { ListValueComponent } from "./dbmt04/list-value/list-value.component";
 import { ListValueDetailComponent } from './dbmt04/list-value-detail/list-value-detail.component';
-import { CardModule } from 'primeng/card';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { LazyTranslationService } from "@app/core/services/lazy-translation.service";
+import { Dbmt04Service } from "./dbmt04/dbmt04.service";
 
 @NgModule({
     declarations: [
@@ -26,7 +25,7 @@ import { LazyTranslationService } from "@app/core/services/lazy-translation.serv
         ReactiveFormsModule,
     ],
     providers: [
-
+        Dbmt04Service
     ]
 })
 export class DbModule {

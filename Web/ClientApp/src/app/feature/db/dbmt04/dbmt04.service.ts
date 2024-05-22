@@ -36,9 +36,7 @@ export class ListValueLang extends EntityBase {
     langName: string = null;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class Dbmt04Service {
     constructor(private http: HttpClient) { }
 
