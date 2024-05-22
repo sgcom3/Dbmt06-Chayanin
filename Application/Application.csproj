@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Features\Services\**" />
+    <EmbeddedResource Remove="Features\Services\**" />
+    <None Remove="Features\Services\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="itext7" Version="8.0.4" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.4" />
+    <PackageReference Include="itext7.pdfhtml" Version="5.0.4" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.25.0" />
+    <PackageReference Include="Scrutor" Version="4.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+</Project>

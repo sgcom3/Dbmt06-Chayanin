@@ -1,0 +1,28 @@
+<div class="layout-topbar layout-topbar-light" [class.layout-topbar-after-scroll]="scroll > 20">
+    <a class="layout-topbar-logo" routerLink="">
+        <img src="assets/layout/images/logo.png" alt="logo">
+    </a>
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+        (click)="layoutService.showProfileSidebar()">
+        <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div #topbarmenu class="layout-topbar-menu"
+        [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+
+        @for (item of languages; track $index) {
+        <button class="p-link layout-topbar-button" [class.hidden]="item.code.toLowerCase() == i18n.language"
+            (click)="changLanguage(item.code)" [pTooltip]="item.label"
+            [tooltipPosition]="layoutService.state.profileSidebarVisible ? 'top' : 'bottom'">
+            <img [src]="item.icon" width="20px" [alt]="item.label">
+            <span>{{ item.label }}</span>
+        </button>
+        }
+
+    </div>
+</div>
