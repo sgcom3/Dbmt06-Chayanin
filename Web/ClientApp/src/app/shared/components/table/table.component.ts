@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewInit, Component, ContentChildren, ElementRef
 import { PrimeTemplate } from 'primeng/api';
 
 @Component({
-  selector: 'datatable',
+  selector: 'datatable:not([server])',
   templateUrl: './table.component.html'
 })
 export class TableComponent implements OnInit, AfterContentInit, AfterViewInit, OnChanges {

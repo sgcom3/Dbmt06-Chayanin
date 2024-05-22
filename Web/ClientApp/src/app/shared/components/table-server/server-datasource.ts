@@ -1,7 +1,7 @@
 import { DataSource } from "@angular/cdk/collections";
 import { BehaviorSubject, combineLatest, defer, filter, finalize, map, Observable, share, Subject, switchMap } from "rxjs";
 import { Page, PageRequest, PaginatedEndpoint, Sort } from "./page";
-import { PageEvent, PaginatorState, SortEvent } from "./dataTable.interface";
+import { PageEvent, PaginatorState, SortEvent } from "./table-server.interface";
 
 export function prepare<T>(callback: () => void): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>): Observable<T> => defer(() => {

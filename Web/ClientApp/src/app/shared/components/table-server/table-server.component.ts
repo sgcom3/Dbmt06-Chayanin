@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { PaginatedDataSource } from './server-datasource';
 import { PaginatorState } from 'primeng/paginator/paginator.interface';
-import { SortEvent } from './dataTable.interface';
+import { SortEvent } from './table-server.interface';
 import { Paginator } from 'primeng/paginator';
-import { DataTableService } from './dataTable.service';
+import { TableServerService } from './table-server.service';
 import { Subject, Subscription, first, take, takeUntil } from 'rxjs';
 import { SubscriptionDisposer } from '../subscription-disposer';
 import { Guid } from 'guid-ts';
@@ -19,16 +19,16 @@ import { Table } from 'primeng/table';
 
 //For demo table server
 @Component({
-  selector: 'dataTable',
-  templateUrl: './dataTable.component.html',
-  styleUrls: ['./dataTable.component.scss'],
+  selector: 'datatable [server]',
+  templateUrl: './table-server.component.html',
+  styleUrls: ['./table-server.component.scss'],
 })
-export class DataTableComponent<T> extends SubscriptionDisposer {
-  @Input() currentPageReportTemplate = '{first} - {last} of {totalRecords}';
+export class TableServerComponent<T> extends SubscriptionDisposer {
+  @Input() currentPageReportTemplate = 'Showing {first} - {last} of {totalRecords} entries';
   @Input() rowsPerPageOptions: number[] = [10, 20, 30];
   @Input() breakpoint = '960px';
   @Input() tableStyle: any;
-  @Input() styleClass: string;
+  @Input() styleClass: string = "p-datatable-striped"; 
   @Input() value: PaginatedDataSource<any, any>;
   @Input() paginator: boolean = true;
   @Input() rowHover: boolean = true;
@@ -69,7 +69,7 @@ export class DataTableComponent<T> extends SubscriptionDisposer {
   id = Guid.newGuid().toString();
 
   constructor(
-    private dataTableService: DataTableService,
+    private dataTableService: TableServerService,
     private router: Router
   ) {
     super();

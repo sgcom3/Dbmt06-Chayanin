@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaveDataService } from '@app/core/services/save-data.service';
-import { PageCriteria } from '@app/shared/components/dataTable/page';
-import { PaginatedDataSource } from '@app/shared/components/dataTable/server-datasource';
+import { PageCriteria } from '@app/shared/components/table-server/page';
+import { PaginatedDataSource } from '@app/shared/components/table-server/server-datasource';
 import { Dbmt04Service } from '../dbmt04.service';
 import { NotifyService } from '@app/core/services/notify.service';
 

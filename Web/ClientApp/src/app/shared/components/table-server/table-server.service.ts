@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { SortEvent, SortMeta } from "./dataTable.interface";
+import { SortEvent, SortMeta } from "./table-server.interface";
 
 @Injectable()
-export class DataTableService {
+export class TableServerService {
     sortFunction$: BehaviorSubject<SortEvent | null> = new BehaviorSubject(null);
     sortFunction = this.sortFunction$.asObservable();
     onSort$: BehaviorSubject<SortMeta | SortMeta[] | null> = new BehaviorSubject(null);

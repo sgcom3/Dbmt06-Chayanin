@@ -14,7 +14,7 @@
         </div>
     </div>
     <br>
-    <dataTable [value]="data" [styleClass]="'p-datatable-striped'">
+    <datatable server [value]="data">
         <ng-template #header pTemplate="header">
             <tr>
                 <th class="text-left" pSortableColumn="groupCode">{{ 'label.DBMT04.GroupCode' | translate
@@ -68,5 +68,5 @@
                 </td>
             </tr>
         </ng-template>
-    </dataTable>
+    </datatable>
 </card>

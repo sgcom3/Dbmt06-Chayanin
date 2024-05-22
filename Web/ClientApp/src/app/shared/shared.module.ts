@@ -37,9 +37,9 @@ import { OrgchartComponent } from './components/orgchart/orgchart.component';
 import { TabComponent } from './components/tab/tab.component';
 import { TabView } from 'primeng/tabview';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { DataTableComponent } from './components/dataTable/dataTable.component';
-import { DataTableService } from './components/dataTable/dataTable.service';
-import { DataTableSortableColumnDirective, SortableColumnDirective } from './components/dataTable/sortable-column.directive';
+import { TableServerComponent } from './components/table-server/table-server.component';
+import { TableServerService } from './components/table-server/table-server.service';
+import { TableServerSortableColumnDirective, SortableColumnDirective } from './components/table-server/sortable-column.directive';
 import { CardDirective } from './components/card/card.directive';
 import { CardComponent } from './components/card/card.component';
 
@@ -75,9 +75,9 @@ const components = [
   OrgchartComponent,
   TabComponent,
   ConfirmDialogComponent,
-  DataTableComponent,
+  TableServerComponent,
   SortableColumnDirective,
-  DataTableSortableColumnDirective,
+  TableServerSortableColumnDirective,
   CardDirective,
   CardComponent,
 ]
@@ -97,7 +97,7 @@ const components = [
     TranslateModule,
     ReactiveFormsModule,
     SortableColumnDirective,
-    DataTableSortableColumnDirective,
+    TableServerSortableColumnDirective,
     CardDirective,
   ],
   providers: [
@@ -105,7 +105,7 @@ const components = [
     ModalService,
     Table,
     TabView ,
-    DataTableService,
+    TableServerService,
     TableService
   ]
 })

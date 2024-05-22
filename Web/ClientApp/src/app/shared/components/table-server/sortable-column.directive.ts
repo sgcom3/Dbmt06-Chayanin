@@ -8,8 +8,8 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Table, TableService } from 'primeng/table';
-import { DataTableService } from './dataTable.service';
-import { SortEvent, SortMeta } from './dataTable.interface';
+import { TableServerService } from './table-server.service';
+import { SortEvent, SortMeta } from './table-server.interface';
 import { PaginatedDataSource } from './server-datasource';
 
 @Directive({
@@ -18,14 +18,17 @@ import { PaginatedDataSource } from './server-datasource';
 export class SortableColumnDirective {
   constructor(
     private dataTable: Table,
-    private dataTableService: DataTableService
+    private dataTableService: TableServerService
   ) {}
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent) {
     if (
-      document.getElementsByTagName('dataTable') &&
-      document.getElementsByTagName('dataTable').length > 0
+      (document.getElementsByTagName('datatable') &&
+      document.getElementsByTagName('datatable').length > 0)
+      && 
+      (document.getElementsByClassName('datatable [server]') &&
+      document.getElementsByClassName('datatable [server]').length > 0)
     ) {
       // Emit the sort event with the clicked column field
       event.preventDefault();
@@ -52,15 +55,15 @@ export class SortableColumnDirective {
 }
 
 @Directive({
-  selector: '[dataTableRoot]',
+  selector: '[dataTableServerRoot]',
 })
-export class DataTableSortableColumnDirective {
+export class TableServerSortableColumnDirective {
   @Input() id;
   @Input() dataSource: PaginatedDataSource<any, any>;
 
   constructor(
     private dataTable: Table,
-    private dataTableService: DataTableService,
+    private dataTableService: TableServerService,
     private elRef: ElementRef,
     private tableService: TableService
   ) {}
