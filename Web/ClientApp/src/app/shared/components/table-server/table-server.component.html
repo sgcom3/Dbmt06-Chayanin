@@ -41,6 +41,11 @@ class="datatable [server] {{class}} {{id}}"
       <ng-container *ngTemplateOutlet="footerTemplate;"></ng-container>
     </ng-template>
   </ng-container>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+        <td [colSpan]="42" class="text-center">{{ 'label.ALL.NotFound' | translate }}</td>
+    </tr>
+  </ng-template>
 </p-table>
 
 
