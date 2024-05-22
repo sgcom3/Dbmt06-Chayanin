@@ -6,7 +6,7 @@
     .p-panel.p-component::ng-deep {
       margin-bottom: 2rem !important;
       .p-panel-header::ng-deep {
-        background-color: transparent;
+        background-color: var(--surface-card);
       }
     }
 
