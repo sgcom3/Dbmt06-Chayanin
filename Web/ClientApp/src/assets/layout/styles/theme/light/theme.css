@@ -5410,8 +5410,8 @@
   }
 
   .p-breadcrumb {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
+    /*background: #ffffff; For demo without bg color */
+    /* border: 1px solid #e5e7eb; For demo without bg color */
     border-radius: 6px;
     padding: 1rem;
   }

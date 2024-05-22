@@ -4,11 +4,11 @@ import { FormDatasource } from '@app/shared/services/base.service';
 import { SubscriptionDisposer } from '@app/shared/components/subscription-disposer';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MessageService } from '@app/core/message.service';
 import { Observable, combineLatest, from, of, switchMap } from 'rxjs';
 import { RowState } from '@app/shared/rowstate.enum';
 import { ModalService } from '@app/shared/components/modal/modal.service';
 import { FormUtilService } from '@app/shared/services/form-util.service';
+import { NotifyService } from '@app/core/services/notify.service';
 
 @Component({
   selector: 'app-list-value-detail',
@@ -30,7 +30,7 @@ export class ListValueDetailComponent extends SubscriptionDisposer implements On
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private util: FormUtilService,
-    private ms: MessageService,
+    private ms: NotifyService,
     private modal: ModalService,
     private db: Dbmt04Service,
   ) {
@@ -124,6 +124,7 @@ export class ListValueDetailComponent extends SubscriptionDisposer implements On
 
     const valueLangs = this.dbListValueLangDataSources.filter(source => !source.isNormal).map(source => source.model);
     this.dbListValue.listValueLangs = valueLangs;
+
 
     this.db.saveListValue(this.dbListValue).pipe(
       switchMap(() => this.db.getListValueByGroupAndValue(this.dbListValue.groupCode, this.dbListValue.value))

@@ -4,18 +4,21 @@ import { FormDatasource } from '@app/shared/services/base.service';
 import { ListGroup, Dbmt04Service } from '../dbmt04.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MessageService } from '@app/core/message.service';
 import { Observable, combineLatest, from, of, switchMap } from 'rxjs';
 import { RowState } from '@app/shared/rowstate.enum';
 import { ModalService } from '@app/shared/components/modal/modal.service';
 import { FormUtilService } from '@app/shared/services/form-util.service';
+import { NotifyService } from '@app/core/services/notify.service';
 
 @Component({
   selector: 'app-list-group-detail',
   templateUrl: './list-group-detail.component.html',
-  styleUrl: './list-group-detail.component.scss'
+  styleUrl: './list-group-detail.component.scss',
 })
-export class ListGroupDetailComponent extends SubscriptionDisposer implements OnInit {
+export class ListGroupDetailComponent
+  extends SubscriptionDisposer
+  implements OnInit
+{
   dbListGroupForm!: FormDatasource<ListGroup>;
   listGroup: ListGroup = {} as ListGroup;
   systemControl: boolean = false;
@@ -26,24 +29,24 @@ export class ListGroupDetailComponent extends SubscriptionDisposer implements On
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private util: FormUtilService,
-    private ms: MessageService,
+    private ms: NotifyService,
     private db: Dbmt04Service,
-    private modal: ModalService,
+    private modal: ModalService
   ) {
     super();
   }
 
   ngOnInit(): void {
     this.createDbListGroup();
-    this.route.data.subscribe((data : any) => {
+    this.route.data.subscribe((data: any) => {
       if (data.dbmt04.detail) {
         this.listGroup = data.dbmt04.detail;
         this.systemControl = data.dbmt04.systemControl;
         this.parentGroupCodes = data.dbmt04.parentGroupCodes;
-        this.parentGroupCodesTemp = JSON.parse(JSON.stringify(this.parentGroupCodes))
+        this.parentGroupCodesTemp = JSON.parse(
+          JSON.stringify(this.parentGroupCodes)
+        );
         this.rebuildForm();
-
-        
       }
     });
   }
@@ -59,11 +62,14 @@ export class ListGroupDetailComponent extends SubscriptionDisposer implements On
       canDelete: true,
       canEdit: true,
     });
-    return fg
+    return fg;
   }
 
   rebuildForm() {
-    this.dbListGroupForm = new FormDatasource<ListGroup>(this.listGroup, this.createDbListGroup());
+    this.dbListGroupForm = new FormDatasource<ListGroup>(
+      this.listGroup,
+      this.createDbListGroup()
+    );
     this.dbListGroupForm.form.markAsPristine();
     if (this.listGroup.rowState != RowState.Add) {
       this.dbListGroupForm.form.controls['groupCode'].disable();
@@ -73,29 +79,36 @@ export class ListGroupDetailComponent extends SubscriptionDisposer implements On
       this.dbListGroupForm.form.controls['canEdit'].disable();
       this.dbListGroupForm.form.controls['canDelete'].disable();
     }
-    this.dbListGroupForm.form.controls['groupCode'].valueChanges.pipe().subscribe(x => {
-      this.parentGroupCodeChange(x)
-    })
+    this.dbListGroupForm.form.controls['groupCode'].valueChanges
+      .pipe()
+      .subscribe((x) => {
+        this.parentGroupCodeChange(x);
+      });
   }
 
   save() {
-    // let invalid = false;
-    // this.util.markFormGroupTouched(this.dbListGroupForm.form)
-    // if (this.dbListGroupForm.form.invalid) invalid = true;
+    let invalid = false;
+    this.util.markFormGroupTouched(this.dbListGroupForm.form);
+    if (this.dbListGroupForm.form.invalid) invalid = true;
 
-    // if (invalid) {
+    if (invalid) {
       this.ms.warning('message.STD00027', ['required data']);
-    //   return;
-    // }
+      return;
+    }
 
-    // this.dbListGroupForm.updateValue();
-    // this.db.saveListGroup(this.listGroup).pipe(
-    //   switchMap(() => this.db.getListGroupByGroupCode(this.listGroup.groupCode))
-    // ).subscribe(res => {
-    //   this.listGroup = res;
-    //   this.rebuildForm();
-      this.ms.success('message.STD00006');
-    // })
+    this.dbListGroupForm.updateValue();
+    this.db
+      .saveListGroup(this.listGroup)
+      .pipe(
+        switchMap(() =>
+          this.db.getListGroupByGroupCode(this.listGroup['groupCode'])
+        )
+      )
+      .subscribe((res) => {
+        this.listGroup = res;
+        this.rebuildForm();
+        this.ms.success('message.STD00006');
+      });
   }
 
   public get isDirty() {
@@ -104,26 +117,42 @@ export class ListGroupDetailComponent extends SubscriptionDisposer implements On
 
   canDeactivate(): Observable<boolean> | boolean {
     if (this.isDirty) {
-      return from(this.modal.confirm("message.STD00002"));
+      return from(this.modal.confirm('message.STD00002'));
     }
     return of(true);
   }
 
-  cancel() {
-
-  }
+  cancel() {}
   parentGroupCodeChange(value) {
     let parentGroupCodeModel = {
-      groupCode: value
-    }
-    let hasValue = this.parentGroupCodes.find(x => x.groupCode == this.dbListGroupForm.form.controls['parentGroupCode'].value)
-    let hasValueTemp = this.parentGroupCodesTemp.find(x => x.groupCode == this.dbListGroupForm.form.controls['parentGroupCode'].value)
-    this.parentGroupCodes = [...this.parentGroupCodesTemp, parentGroupCodeModel];
-    if (hasValueTemp && this.dbListGroupForm.form.controls['parentGroupCode'].value && !hasValue) {
-      this.dbListGroupForm.form.controls['parentGroupCode'].setValue(value)
-    }
-    else if (hasValue && this.dbListGroupForm.form.controls['parentGroupCode'].value && hasValueTemp == undefined) {
-      this.dbListGroupForm.form.controls['parentGroupCode'].setValue(value)
+      groupCode: value,
+    };
+    let hasValue = this.parentGroupCodes.find(
+      (x) =>
+        x.groupCode ==
+        this.dbListGroupForm.form.controls['parentGroupCode'].value
+    );
+    let hasValueTemp = this.parentGroupCodesTemp.find(
+      (x) =>
+        x.groupCode ==
+        this.dbListGroupForm.form.controls['parentGroupCode'].value
+    );
+    this.parentGroupCodes = [
+      ...this.parentGroupCodesTemp,
+      parentGroupCodeModel,
+    ];
+    if (
+      hasValueTemp &&
+      this.dbListGroupForm.form.controls['parentGroupCode'].value &&
+      !hasValue
+    ) {
+      this.dbListGroupForm.form.controls['parentGroupCode'].setValue(value);
+    } else if (
+      hasValue &&
+      this.dbListGroupForm.form.controls['parentGroupCode'].value &&
+      hasValueTemp == undefined
+    ) {
+      this.dbListGroupForm.form.controls['parentGroupCode'].setValue(value);
     }
   }
 }

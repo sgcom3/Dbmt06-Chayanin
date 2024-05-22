@@ -1,0 +1,9 @@
+:host {
+    //For demo : fix bug primeNg height 
+    .p-dropdown-custom:not(.p-inputwrapper-filled)::ng-deep{
+        .p-dropdown .p-dropdown-label:not(.p-placeholder)::ng-deep{
+            min-height: 41.2px !important ;
+            // background-color:red !important;
+        }
+    }
+}  

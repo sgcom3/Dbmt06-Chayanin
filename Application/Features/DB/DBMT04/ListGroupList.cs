@@ -45,8 +45,8 @@ namespace Application.Features.DB.DBMT04
                 sql.AppendLine("    FROM		db.list_group lg ");
                 if (!string.IsNullOrWhiteSpace(request.Keyword))
                 {
-                    sql.AppendLine("WHERE       CONCAT(lg.group_code, lg.description)");
-                    sql.AppendLine("            like CONCAT('%', @Keyword, '%')");
+                    sql.AppendLine("WHERE       CONCAT(LOWER(lg.group_code), LOWER(lg.description))");
+                    sql.AppendLine("            like CONCAT('%', LOWER(@Keyword), '%')");
                 }
 
                 return await _context.GetPage(sql.ToString(), new { Keyword = request.Keyword }, request, cancellationToken);

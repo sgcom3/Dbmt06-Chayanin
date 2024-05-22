@@ -40,6 +40,13 @@ namespace Application.Features.DB.DBMT04
                     {
                         throw new RestException(HttpStatusCode.NotFound, "message.Dupplicated");
                     }
+                    if (request.ListValueLangs.Any() && request.ListValueLangs.Any(x => x.Value != request.Value))
+                    {
+                        foreach (var item in request.ListValueLangs)
+                        {
+                            item.Value = request.Value;
+                        }
+                    }
                     _context.Set<ListValue>().Add(request);
                 }
                 else
@@ -50,7 +57,7 @@ namespace Application.Features.DB.DBMT04
                     }
 
                     _context.Set<ListValue>().Attach(request);
-                    _context.Entry(request).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _context.Entry(request).State = EntityState.Modified;
                     _context.Entry(request).Property(x => x.ValueId).IsModified = false;
                 }
                 await _context.SaveChangesAsync(cancellationToken);

@@ -45,17 +45,17 @@ namespace Application.Features.DB.DBMT04
                 sql.AppendLine("                lv.active AS \"active\" ");
                 sql.AppendLine("    FROM   db.list_value lv  ");
                 sql.AppendLine("    LEFT JOIN db.list_value_lang lvl  ON lvl.value = lv.value ");
-                sql.AppendLine("                                               AND lvl.group_code = @GroupCode ");
-                sql.AppendLine("                                               AND lvl.language_code =  @Lang ");
+                sql.AppendLine("                                               AND LOWER(lvl.group_code) = LOWER(@GroupCode) ");
+                sql.AppendLine("                                               AND LOWER(lvl.language_code) =  LOWER(@Lang) ");
                 sql.AppendLine("    WHERE		1 = 1");
                 if (!string.IsNullOrWhiteSpace(request.Keyword))
                 {
-                    sql.AppendLine("AND       CONCAT(lvl.value_text, lv.description)");
-                    sql.AppendLine("            like CONCAT('%', @Keyword, '%')");
+                    sql.AppendLine("AND       CONCAT(LOWER(lvl.value_text), LOWER(lv.description))");
+                    sql.AppendLine("            like CONCAT('%', LOWER(@Keyword), '%')");
                 }
                 if (!string.IsNullOrWhiteSpace(request.GroupCode))
                 {
-                    sql.AppendLine("AND       lv.group_code = @GroupCode");
+                    sql.AppendLine("AND       LOWER(lv.group_code) = LOWER(@GroupCode)");
 
                 }
 

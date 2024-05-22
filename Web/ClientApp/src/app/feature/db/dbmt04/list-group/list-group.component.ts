@@ -4,7 +4,7 @@ import { SaveDataService } from '@app/core/services/save-data.service';
 import { PageCriteria } from '@app/shared/components/dataTable/page';
 import { PaginatedDataSource } from '@app/shared/components/dataTable/server-datasource';
 import { Dbmt04Service } from '../dbmt04.service';
-import { MessageService } from '@app/core/message.service';
+import { NotifyService } from '@app/core/services/notify.service';
 
 @Component({
   selector: 'app-list-group',
@@ -22,7 +22,7 @@ export class ListGroupComponent implements OnInit {
     private router: Router,
     private db: Dbmt04Service,
     private save: SaveDataService,
-    private ms: MessageService,
+    private ms: NotifyService,
   ) { }
 
   ngOnInit(): void {

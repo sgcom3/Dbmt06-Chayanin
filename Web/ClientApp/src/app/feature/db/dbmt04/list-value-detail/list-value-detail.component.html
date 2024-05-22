@@ -17,26 +17,19 @@
     <form #menu [formGroup]="dbListValueDataSource.form">
         <div class="grid mt-2">
             <div class="col-3 md:col-3 lg:col-3 xl:col-3">
-                <label htmlFor="groupCode">{{ 'label.DBMT04.GroupCode' | translate }}</label>
-                <small class="p-error">*</small>
-                <textbox id="groupCode" formControlName="groupCode"></textbox>
+                <textbox id="groupCode" formControlName="groupCode">{{ 'label.DBMT04.GroupCode' | translate }}</textbox>
             </div>
             <div class="col-3 md:col-3 lg:col-3 xl:col-3">
-                <label htmlFor="value">{{ 'label.DBMT04.Value' | translate }}</label>
-                <small class="p-error">*</small>
-                <textbox id="value" formControlName="value"></textbox>
+                <textbox id="value" formControlName="value">{{ 'label.DBMT04.Value' | translate }}</textbox>
             </div>
             <div class="col-2 md:col-2 lg:col-2 xl:col-2">
-                <label htmlFor="sequence">{{ 'label.DBMT04.Sequence' | translate }}</label>
-                <number id="sequence" formControlName="sequence"></number>
+                <number id="sequence" formControlName="sequence">{{ 'label.DBMT04.Sequence' | translate }}</number>
             </div>
             <div class="col-2 md:col-2 lg:col-2 xl:col-2">
-                <label htmlFor="parentGroupCode">{{ 'label.DBMT04.ParentGroupCode' | translate }}</label>
-                <textbox id="parentGroupCode" formControlName="parentGroupCode"></textbox>
+                <textbox id="parentGroupCode" formControlName="parentGroupCode">{{ 'label.DBMT04.ParentGroupCode' | translate }}</textbox>
             </div>
             <div class="col-2 md:col-2 lg:col-2 xl:col-2">
-                <label htmlFor="parentValue">{{ 'label.DBMT04.ParentValue' | translate }}</label>
-                <textbox id="parentValue" formControlName="parentValue"></textbox>
+                <textbox id="parentValue" formControlName="parentValue">{{ 'label.DBMT04.ParentValue' | translate }}</textbox>
             </div>
         </div>
         <div class="grid mt-2">
@@ -45,18 +38,16 @@
                 <textbox id="interfaceMappingCode" formControlName="interfaceMappingCode"></textbox>
             </div> -->
             <div class="col-6 md:col-6 lg:col-6 xl:col-6">
-                <label htmlFor="description">{{ 'label.ALL.Description' | translate }}</label>
-                <textbox id="description" formControlName="description"></textbox>
+                <textbox id="description" formControlName="description">{{ 'label.ALL.Description' | translate }}</textbox>
             </div>
             <div class="col-6 md:col-6 lg:col-6 xl:col-6">
-                <label htmlFor="color">{{ 'label.DBMT04.Color' | translate }}</label>
-                <textbox id="color" formControlName="color"></textbox>
+                <textbox id="color" formControlName="color">{{ 'label.DBMT04.Color' | translate }}</textbox>
             </div>
         </div>
         <div class="grid mt-2">
             <div class="col-3 md:col-3 lg:col-3 xl:col-3">
-                <!-- <p-checkbox id="active" [bindValue]="true" [bindLabel]="'label.ALL.Active' | translate"
-                    formControlName="active"></p-checkbox> -->
+                <checkbox id="active" [label]="'label.ALL.Active' | translate" 
+                    formControlName="active"></checkbox>
             </div>
         </div>
     </form>
@@ -67,12 +58,10 @@
         <div class="col-12 md:col-12 lg:col-12 xl:col-12">
             <p-tabView>
                 <p-tabPanel *ngFor="let language of dbListValueLangDataSources; let index = index"
-                    header="{{language.model.langName}}">
-                    <ng-template #content pTemplate="content">
+                    [header]="language.model.langName">
+                    <ng-template pTemplate="content">
                         <form #tab [formGroup]="language.form">
-                            <label htmlFor="valueText">{{ 'label.DBMT04.ValueName' | translate }}</label>
-                            <small class="p-error">*</small>
-                            <textbox id="valueText" formControlName="valueText"></textbox>
+                            <textbox id="valueText" formControlName="valueText">{{ 'label.DBMT04.ValueName' | translate }}</textbox>
                         </form>
                     </ng-template>
                 </p-tabPanel>

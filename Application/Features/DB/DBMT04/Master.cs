@@ -43,7 +43,7 @@ namespace Application.Features.DB.DBMT04
 
             private Task<List<ListVm>> GetLanguage(CancellationToken cancellationToken)
             {
-                var result = (from lang in _context.Set<Language>().Where(x => x.LanguageCode == (_user.Language ?? "EN") && x.Active == true)
+                var result = (from lang in _context.Set<Language>().Where(x => x.LanguageCode.ToLower() == (_user.Language ?? "EN").ToLower() && x.Active == true)
                               from langLabel in _context.Set<LanguageLang>().Where(x => x.LanguageCodeForName == lang.LanguageCode && x.LanguageCode == lang.LanguageCode)
                               orderby lang.LanguageCode
                               select new ListVm()
