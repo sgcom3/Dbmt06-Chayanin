@@ -23,7 +23,7 @@ internal class CustomConfigurationProvider : ConfigurationProvider
             var languages = con.Query<Configuration>(@"SELECT  concat('Languages',':',d.language_code) as Key ,l.language_name as Value
                                                          FROM  db.language as d 
                                                          inner join db.language_lang as l  on l.language_code = d.language_code 
-                                                         and l.language_code_forname = d.language_code 
+                                                         and l.language_code_for_name = d.language_code 
                                                          where active = true ");
             Data = configs.Concat(languages).ToDictionary(c => c.Key, c => c.Value, StringComparer.OrdinalIgnoreCase);
 

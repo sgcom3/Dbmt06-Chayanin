@@ -35,6 +35,8 @@ public class List
         public async Task<IEnumerable<MenuVm>> Handle(Query request, CancellationToken cancellationToken)
         {
             StringBuilder sql = new StringBuilder();
+
+
             sql.AppendLine(@"
                 select 
                     m.menu_code as ""MenuCode"",
@@ -44,19 +46,27 @@ public class List
                     m.icon
                 from su.menu m
                 left join su.program p on p.program_code = m.program_code
-                where m.system_code = 'ccs' and m.active = true
+                where 1=1
+                --m.system_code = 'ccs'  
+                and m.active = true
                 and  exists(select 'x'	
-	                             from su.profile_menu mp 	
-	                             inner join su.user_profile p on p.profile_code  = mp.profile_code 	
-	                             where mp.menu_code  = m.menu_code 	
-	                             and p.user_id = :UserId ) 	
+                              from su.profile_menu mp 	
+                              inner join su.user_profile p on p.profile_code  = mp.profile_code 	
+                              where mp.menu_code  = m.menu_code 	
+                              --and p.user_id = :UserId 
+                                    ) 	
                 order by m.menu_code
             ");
+
 
             IEnumerable<MenuVm> menus = await _context.QueryAsync<MenuVm>(sql.ToString(), new
             {
                 UserId = _user.UserId
             }, cancellationToken);
+
+
+
+
             MenuVm root = new();
             menus.ToList().ForEach(f =>
             {

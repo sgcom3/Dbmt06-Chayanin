@@ -33,25 +33,28 @@ public class Edit
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            User user = _context.Set<User>().Where(w => w.UserName == _user.UserName).FirstOrDefault();
+            //    User user = _context.Set<User>().Where(w => w.UserName == _user.UserName).FirstOrDefault();
 
-            if (user != null)
-            {
-                user.Ripple = request.Ripple;
-                user.Inputstyle = request.InputStyle;
-                user.Colorscheme = request.ColorScheme;
-                user.Color = request.Color;
-                user.Scale = request.Scale;
-                user.Menumode = request.MenuMode;
+            //    if (user != null)
+            //    {
+            //        user.Ripple = request.Ripple;
+            //        user.Inputstyle = request.InputStyle;
+            //        user.Colorscheme = request.ColorScheme;
+            //        user.Color = request.Color;
+            //        user.Scale = request.Scale;
+            //        user.Menumode = request.MenuMode;
 
-                _context.Set<User>().Attach(user);
-                _context.Entry(user).State = EntityState.Modified;
-                await _context.SaveChangesAsync(cancellationToken);
+            //        _context.Set<User>().Attach(user);
+            //        _context.Entry(user).State = EntityState.Modified;
+            //        await _context.SaveChangesAsync(cancellationToken);
 
-                return true;
-            }
+            //        return true;
+            //    }
 
-            return false;
+            //    return false;
+
+            //For demo
+            return true;
         }
     }
 }

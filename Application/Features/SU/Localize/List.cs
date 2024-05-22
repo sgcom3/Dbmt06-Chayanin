@@ -44,7 +44,7 @@ public class List
             }
 
             string labels = await _context.QuerySingleAsync<string>(@"SELECT json_object_agg(concat(program_code ,'.',field_name) , label_name) as Json FROM su.program_label where lower(language_code) = @Lang and lower(module_code)= @module", new { lang = request.Lang, module = request.Module }, token: cancellationToken);
-            
+
             JsonElement labelJson = JsonDocument.Parse(labels ?? "{}").RootElement;
 
             return new Localize() { Message = messageJson, Menu = menuJson, Label = labelJson };

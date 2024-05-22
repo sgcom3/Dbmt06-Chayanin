@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'access-denied', component: AccessdeniedComponent, title: "Access Denied" },
   LayoutRoute.childRoutes([
     { path: 'demo', loadChildren: () => import("./feature/demo/demo.module").then(m => m.DemoModule) },
+    { path: 'db', loadChildren: () => import("./feature/db/db.module").then(m => m.DbModule) },
   ]),
   { path: '**', redirectTo: '/notfound', pathMatch: 'full' }
 ];

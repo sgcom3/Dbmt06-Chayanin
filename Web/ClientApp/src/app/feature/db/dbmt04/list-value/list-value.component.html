@@ -1,0 +1,72 @@
+<div class="d-flex text-left mb-3">
+    <h4 class="mt-3" >{{ 'label.DBMT04.ManageVariableGroups' | translate }} > {{ 'label.DBMT04.ManageVariableValues' | translate }}</h4>
+  </div>
+<card [toggleable]="false">
+    <div class="grid">
+        <div class="col-6 md:col-6 lg:col-6 xl:col-6">
+            <textbox [(ngModel)]="keyword" (keyup.enter)="onSearch()"
+            placeholder="{{ 'label.DBMT04.ValueName' | translate }} / {{ 'label.ALL.Description' | translate }}">
+            </textbox>
+        </div>
+        <div class="col-6 md:col-6 lg:col-6 xl:col-6 text-end">
+            <p-button icon="pi pi-plus-circle" (click)="form()" *ngIf="canInsert"
+                label="{{ 'label.ALL.Add' | translate }}"></p-button>
+        </div>
+    </div>
+    <br>
+    <dataTable [value]="data" [styleClass]="'p-datatable-striped'">
+        <ng-template #header pTemplate="header">
+            <tr>
+                <th class="text-left" pSortableColumn="groupCode">{{ 'label.DBMT04.GroupCode' | translate
+                    }}<p-sortIcon field="groupCode"></p-sortIcon></th>
+                <th class="text-left" pSortableColumn="valueText">{{ 'label.DBMT04.ValueName' | translate
+                    }}<p-sortIcon field="valueText"></p-sortIcon></th>
+                <th class="text-left" pSortableColumn="value">{{ 'label.DBMT04.Value' | translate
+                    }}<p-sortIcon field="value"></p-sortIcon></th>
+                <th class="text-left" pSortableColumn="description">{{ 'label.ALL.Description' | translate
+                    }}<p-sortIcon field="description"></p-sortIcon></th>
+                <th class="text-center" pSortableColumn="sequence">{{ 'label.DBMT04.Sequence' | translate
+                    }}<p-sortIcon field="sequence"></p-sortIcon></th>
+                <th class="text-center" pSortableColumn="active">{{ 'label.ALL.Active' | translate
+                    }}<p-sortIcon field="active"></p-sortIcon></th>
+                <th aria-label="delete"></th>
+            </tr>
+        </ng-template>
+        <ng-template #body pTemplate="body" let-dataItem="dataItem" let-rowIndex="rowIndex">
+            <tr>
+                <td class="text-left">
+                    {{dataItem.groupCode}}
+                </td>
+                <td class="text-left">
+                    <a [routerLink]="['/db/dbmt04/value/detail']"
+                        [state]="{valueId : dataItem.valueId, groupCode : dataItem.groupCode, canEdit: canEdit}">
+                        {{dataItem.valueText}}
+                    </a>
+                </td>
+                <td class="text-left">
+                    {{dataItem.value}}
+                </td>
+                <td class="text-left">
+                    {{dataItem.description}}
+                </td>
+                <td class="text-center">
+                    {{dataItem.sequence}}
+                </td>
+                <td class="text-center">
+                    <i class="pi {{dataItem.active ? 'pi-check active-icon' : 'pi-ban p-error'}}"> </i>
+                </td>
+                <td class="text-center">
+                    <p-confirm-dialog-ng (confirm)="remove(dataItem.valueId)" (cancel)="cancel()">
+                        <ng-container body>
+                            {{ 'message.STD00003' | translate }}
+                        </ng-container>
+                        <ng-container btn>
+                            <p-button [text]="true" severity="danger" icon="far fa-trash-alt"
+                                *ngIf="canDelete"></p-button>
+                        </ng-container>
+                    </p-confirm-dialog-ng>
+                </td>
+            </tr>
+        </ng-template>
+    </dataTable>
+</card>

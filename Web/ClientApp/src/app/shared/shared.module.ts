@@ -32,10 +32,16 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
-import { Table } from 'primeng/table';
+import { Table, TableService } from 'primeng/table';
 import { OrgchartComponent } from './components/orgchart/orgchart.component';
 import { TabComponent } from './components/tab/tab.component';
 import { TabView } from 'primeng/tabview';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { DataTableComponent } from './components/dataTable/dataTable.component';
+import { DataTableService } from './components/dataTable/dataTable.service';
+import { DataTableSortableColumnDirective, SortableColumnDirective } from './components/dataTable/sortable-column.directive';
+import { CardDirective } from './components/card/card.directive';
+import { CardComponent } from './components/card/card.component';
 
 const components = [
   TextboxComponent,
@@ -67,7 +73,13 @@ const components = [
   BreadcrumbComponent,
   AttachmentComponent,
   OrgchartComponent,
-  TabComponent
+  TabComponent,
+  ConfirmDialogComponent,
+  DataTableComponent,
+  SortableColumnDirective,
+  DataTableSortableColumnDirective,
+  CardDirective,
+  CardComponent,
 ]
 
 @NgModule({
@@ -83,13 +95,18 @@ const components = [
     PrimeNgs,
     components,
     TranslateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SortableColumnDirective,
+    DataTableSortableColumnDirective,
+    CardDirective,
   ],
   providers: [
     DialogService,
     ModalService,
     Table,
-    TabView 
+    TabView ,
+    DataTableService,
+    TableService
   ]
 })
 export class SharedModule { }

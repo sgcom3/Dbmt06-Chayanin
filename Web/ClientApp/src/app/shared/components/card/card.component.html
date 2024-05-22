@@ -1,0 +1,38 @@
+
+<ng-template #contentTemplate>
+    <ng-content></ng-content>
+</ng-template>
+
+
+
+<p-panel 
+    *ngIf="loadedPanel"
+    [header]="header" 
+    [toggleable]="toggleable"
+    [style]="style"
+    [styleClass]="styleClass"
+    [class]="'p-card-custom ' + (id??'') + ' ' + (class ??'')">
+    <ng-template *ngIf="template && template.headerTemplate" pTemplate="header">
+        <ng-container *ngTemplateOutlet="template.headerTemplate"></ng-container>
+    </ng-template>
+    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+    <ng-template *ngIf="template && template.footerTemplate" pTemplate="footer">
+        <ng-container *ngTemplateOutlet="template.footerTemplate"></ng-container>
+    </ng-template>
+</p-panel>
+<p-card 
+    *ngIf="loadedCard"
+    [id]="id"
+    [header]="header" 
+    [subheader]="subheader" 
+    [style]="style"
+    [styleClass]="styleClass"
+    [class]="'p-card-custom ' + (id??'') + ' ' + (class ??'')">
+    <ng-template *ngIf="template && template.headerTemplate" pTemplate="header">
+        <ng-container *ngTemplateOutlet="template.headerTemplate"></ng-container>
+    </ng-template>
+   <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+     <ng-template *ngIf="template && template.footerTemplate" pTemplate="footer">
+        <ng-container *ngTemplateOutlet="template.footerTemplate"></ng-container>
+    </ng-template>
+</p-card> 

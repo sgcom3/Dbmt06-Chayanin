@@ -1,0 +1,61 @@
+<div class="align-items-end text-right mb-2" >
+    <p-confirm-dialog-ng (confirm)="save()" (cancel)="cancel()">
+        <ng-container body>
+            {{ 'message.STD00009' | translate }}
+        </ng-container>
+        <ng-container btn>
+            <p-button icon="pi pi-check" label="{{ 'label.ALL.Save' | translate }}"></p-button>
+        </ng-container>
+    </p-confirm-dialog-ng>
+</div>
+
+<p-breadcrumb
+    [model]="[{ label: 'label.DBMT04.ManageVariableGroups' | translate}, { label: 'label.ALL.Detail' | translate}]">
+</p-breadcrumb>
+
+<card header="{{ 'label.ALL.Detail' | translate }}" class="p-fluid">
+    <form [formGroup]="dbListGroupForm.form">
+        <div class="grid mt-2">
+            <div class="col-4 md:col-4 lg:col-4 xl:col-4">
+                <textbox id="groupCode" formControlName="groupCode">{{ 'label.DBMT04.GroupCode' | translate }}</textbox>
+            </div>
+            <div class="col-4 md:col-4 lg:col-4 xl:col-4">
+                <number id="sequence" formControlName="sequence">{{ 'label.DBMT04.Sequence' | translate }}</number>
+            </div>
+            <div class="col-4 md:col-4 lg:col-4 xl:col-4">
+                <p-dropdown [optionLabel]="'groupCode'" [optionValue]="'groupCode'" [options]="parentGroupCodes"
+                    formControlName="parentGroupCode" [showClear]="true" [filter]="true">
+                    <ng-template #selectedItem pTemplate="selectedItem" let-selectedOption="selectedOption">
+                        {{ selectedOption.groupCode }}
+                    </ng-template>
+                    {{ 'label.DBMT04.ParentGroupCode' | translate }}
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="grid mt-2">
+            <div class="col-12 md:col-12 lg:col-12 xl:col-12">
+                <textbox id="description" formControlName="description">{{ 'label.ALL.Description' | translate }}</textbox>
+            </div>
+        </div>
+        <div class="grid mt-2">
+            <div class="col-3 md:col-3 lg:col-3 xl:col-3">
+                <!-- <p-checkbox id="active" [bindValue]="true" [bindLabel]="'label.ALL.Active' | translate"
+                    formControlName="active"></p-checkbox> -->
+            </div>
+            <div class="col-3 md:col-3 lg:col-3 xl:col-3">
+                <!-- <p-checkbox id="canInsert" [bindValue]="true" [bindLabel]="'label.DBMT04.CanInsert' | translate"
+                    formControlName="canInsert">
+                </p-checkbox> -->
+            </div>
+            <div class="col-3 md:col-3 lg:col-3 xl:col-3">
+                <!-- <p-checkbox id="canDelete" [bindValue]="true" [bindLabel]="'label.DBMT04.CanDelete' | translate"
+                    formControlName="canDelete">
+                </p-checkbox> -->
+            </div>
+            <div class="col-3 md:col-3 lg:col-3 xl:col-3">
+                <!-- <p-checkbox id="canEdit" [bindValue]="true" [bindLabel]="'label.DBMT04.CanEdit' | translate"
+                    formControlName="canEdit"></p-checkbox> -->
+            </div>
+        </div>
+    </form>
+</card>

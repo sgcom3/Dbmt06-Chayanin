@@ -49,4 +49,90 @@ public partial class CleanDbContext : DbContext, ICleanDbContext
     public Task<IEnumerable<TReturn>> QueryAsync<TFirst, TSecond, TReturn>(string sql, Func<TFirst, TSecond, TReturn> map, string splitOn = "Id", object param = null, CancellationToken token = default, bool isStore = false) => this.Database.GetDbConnection().QueryAsync<TFirst, TSecond, TReturn>(new CommandDefinition(sql, param, this._currentTransaction?.GetDbTransaction(), cancellationToken: token, commandType: isStore ? CommandType.StoredProcedure : CommandType.Text), map, splitOn);
 
     public Task<IEnumerable<TReturn>> QueryAsync<TFirst, TSecond, TThird, TReturn>(string sql, Func<TFirst, TSecond, TThird, TReturn> map, string splitOn = "Id", object param = null, CancellationToken token = default, bool isStore = false) => this.Database.GetDbConnection().QueryAsync<TFirst, TSecond, TThird, TReturn>(new CommandDefinition(sql, param, this._currentTransaction?.GetDbTransaction(), cancellationToken: token, commandType: isStore ? CommandType.StoredProcedure : CommandType.Text), map, splitOn);
+
+    public async Task<PageDto> GetPage(string sql, object param, RequestPageQuery page, CancellationToken token = default(CancellationToken))
+    {
+        string sort = string.Empty;
+        if (page.Sort != null)
+        {
+            var sortPart = page.Sort.Split(",");
+            string sortSQL = null;
+            foreach (var column in sortPart)
+            {
+                var columnPart = column.Split(" ");
+                sortSQL = string.Join(",", sortSQL, $"\"{columnPart[0]}\" {(columnPart.Length == 2 ? columnPart[1] : string.Empty)} ");
+            }
+            sort = $"ORDER BY {sortSQL.Substring(1, sortSQL.Length - 1)} ";
+        }
+
+
+        #region :: PostgreSQL ::
+        string query = $@"WITH page as
+                          ({sql})
+                           SELECT *
+                           FROM(
+                              SELECT page.*
+                              FROM page 
+                              LIMIT 1
+                          ) AS for_total 
+                           CROSS JOIN (SELECT Count(1) AS Count FROM page) AS {nameof(PageDto.Count)} 
+                           UNION ALL
+                           SELECT *
+                           FROM( 
+                           SELECT page.*,0 AS {nameof(PageDto.Count)}
+                           FROM page
+                           {sort} OFFSET {page.Page * page.Size} ROWS FETCH NEXT {page.Size} ROWS ONLY
+                        ) AS for_data";
+
+        #endregion
+
+        #region :: SQL Server ::
+        //string query = $@"WITH page AS 
+        //                            ({sql})
+        //                        SELECT
+        //                            *
+        //                        FROM (
+        //                            SELECT
+        //                                page.*
+        //                            FROM
+        //                                page
+        //                            {sort}
+        //                            OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+        //                        ) AS for_total
+        //                        CROSS JOIN (
+        //                            SELECT
+        //                                COUNT(*) AS count
+        //                            FROM
+        //                                page
+        //                        ) AS Count
+        //                        UNION ALL
+        //                        SELECT
+        //                            *
+        //                        FROM (
+        //                            SELECT
+        //                                page.*,
+        //                                0 AS Count
+        //                            FROM
+        //                                page
+        //                            {sort}
+        //                            OFFSET {page.Page * page.Size} ROWS FETCH NEXT {page.Size} ROWS ONLY
+        //                        ) AS for_data;";
+        #endregion
+
+        var result = await this.Database.GetDbConnection().QueryAsync<dynamic>(new CommandDefinition(query, param, cancellationToken: token));
+        var firstRow = result.FirstOrDefault();
+        long count = 0;
+        if (firstRow != null && (firstRow as IDictionary<string, object>)["count"] != null)
+        {
+            long.TryParse((firstRow as IDictionary<string, object>)["count"] + "", out count);
+        };
+        
+
+        return new PageDto
+        {
+            Rows = result.Count() > 0 ? result.Skip(1) : result,
+            Count = count
+        };
+
+    }
 }
