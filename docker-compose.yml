@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  web:
+    image: ${DOCKER_REGISTRY-}web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ConnectionStrings__SQL=Host=db;Port=5432;Username=postgres;Password=p@ssw0rd;Database=postgres
+    depends_on:
+      - db
+    networks:
+      - internal
+  db:
+    image: postgres:16.3-alpine3.19
+    environment:
+        "POSTGRES_PASSWORD": "p@ssw0rd"
+    volumes:
+        - ./db/initial-script:/docker-entrypoint-initdb.d
+        - ./db/data:/var/lib/postgresql/data
+    ports:
+        - 54329:5432
+    networks:
+      - internal
+
+networks:
+  internal:
