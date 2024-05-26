@@ -7,7 +7,6 @@ import { ListGroupDetailResolverService } from "./dbmt04/list-group-detail/list-
 import { ListValueComponent } from "./dbmt04/list-value/list-value.component";
 import { ListValueDetailComponent } from "./dbmt04/list-value-detail/list-value-detail.component";
 import { ListValueDetailResolverService } from "./dbmt04/list-value-detail/list-value-detail.resolver";
-// import { SetupHolidayComponent } from "./dbmt09/setup-holiday/setup-holiday.component";
 
 const routes: Routes = [
     {
@@ -36,6 +35,18 @@ const routes: Routes = [
                 canDeactivate: [CanDeactivate],
                 resolve: { dbmt04: ListValueDetailResolverService },
                 data: { code: 'dbmt04' },
+            },
+            {
+                path: 'dbmt20',
+                component: LangListComponent,
+                data: { code: 'dbmt20' },
+            },
+            {
+                path: 'dbmt20/detail',
+                component: LangDetailComponent,
+                canDeactivate: [CanDeactivate],
+                resolve: { dbmt20: langDetailResolver },
+                data: { code: 'dbmt20' },
             },
         ]
     }
