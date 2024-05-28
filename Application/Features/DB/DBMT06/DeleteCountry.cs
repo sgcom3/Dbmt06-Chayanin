@@ -1,22 +1,22 @@
+﻿using Application.Behaviors;
+using Application.Interfaces;
+using Domain.Entities.DB;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Behaviors;
-using Application.Interfaces;
-using Domain.Entities.DB;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.DB.DBMT20
+namespace Application.Features.DB.DBMT06
 {
-    public class DeleteLanguage
+    public class DeleteCountry
     {
         public class Command : ICommand
         {
-            public string LanguageCode { get; set; }
+            public string CountryCode { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -31,9 +31,9 @@ namespace Application.Features.DB.DBMT20
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var group = await _context.Set<Language>().FirstOrDefaultAsync(o => o.LanguageCode == request.LanguageCode, cancellationToken);
-                group.Active = false;
-                _context.Entry(group).State = EntityState.Modified;
+                var country = await _context.Set<Country>().FirstOrDefaultAsync(o => o.CountryCode == request.CountryCode, cancellationToken);
+                country.Active = false;
+                _context.Entry(country).State = EntityState.Modified;
 
                 await _context.SaveChangesAsync(cancellationToken);
                 return Unit.Value;

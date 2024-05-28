@@ -1,4 +1,4 @@
-using Application.Common.Models;
+﻿using Application.Common.Models;
 using Application.Interfaces;
 using MediatR;
 using System;
@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.DB.DBMT20
+namespace Application.Features.DB.DBMT06
 {
-    public class LanguageList
+    public class CountryList
     {
         public class Query : RequestPageQuery, IRequest<PageDto>
         {
@@ -31,15 +31,22 @@ namespace Application.Features.DB.DBMT20
             public async Task<PageDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 StringBuilder sql = new StringBuilder();
-                
-                                 
-                sql.AppendLine("    SELECT		lg.language_code AS \"languageCode\",");
-                sql.AppendLine("                lg.description AS \"description\",");
-                sql.AppendLine("                lg.active AS \"active\" ");
-                sql.AppendLine("    FROM		db.language lg ");
+
+
+                sql.AppendLine("    SELECT		ct.country_code AS \"countryCode\",");
+                sql.AppendLine("                ct.tel_country_code AS \"telCountryCode\",");
+                sql.AppendLine("                ct.active AS \"active\",");
+                sql.AppendLine("                ct.zone_id as \"zoneId\" ,");
+                sql.AppendLine("                ct.currency_code as \"currencyCode\" ,");
+                sql.AppendLine("                ct.trunk_prefix as \"trunkPrefix\" ,");
+                sql.AppendLine("                ct.description as \"description\" ,");
+                sql.AppendLine("                ct.country_image as \"countryImage\" ,");
+                sql.AppendLine("                ct.territory_code as \"territoryCode\" ,");
+                sql.AppendLine("                ct.interface_mapping_code as \"interfaceMappingCode\" ");
+                sql.AppendLine("    FROM		db.country ct ");
                 if (!string.IsNullOrWhiteSpace(request.Keyword))
                 {
-                    sql.AppendLine("WHERE       CONCAT(LOWER(lg.language_code), LOWER(lg.description))");
+                    sql.AppendLine("WHERE       CONCAT(LOWER(ct.country_code), LOWER(ct.description))");
                     sql.AppendLine("            like CONCAT('%', LOWER(@Keyword), '%')");
                 }
 
