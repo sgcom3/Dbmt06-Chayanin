@@ -43,8 +43,8 @@ namespace Application.Features.DB.DBMT06
 
             private Task<List<ListVm>> GetCountry(CancellationToken cancellationToken)
             {
-                var result = (from country in _context.Set<Country>().Where(x => x.CountryCode.ToLower() == (_user.Country ?? "EN").ToLower() && x.Active == true)
-                              from countryLabel in _context.Set<CountryLang>().Where(x => x.CountryCode == country.CountryCode)
+                var result = (from country in _context.Set<Country>().Where(x=> x.Active == true)
+                              from countryLabel in _context.Set<CountryLang>().Where(x => x.CountryCode == country.CountryCode && x.LanguageCode == (_user.Language ?? "EN"))
                               orderby country.CountryCode
                               select new ListVm()
                               {

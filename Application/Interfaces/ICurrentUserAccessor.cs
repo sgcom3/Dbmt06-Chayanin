@@ -8,5 +8,4 @@ public interface ICurrentUserAccessor
     string Organization { get; }
     string Language { get; }
     string ProgramCode { get; }
-    string Country {get;}
 }
