@@ -15,6 +15,7 @@ import { Dbmt04Service } from "./dbmt04/dbmt04.service";
         ListGroupDetailComponent,
         ListValueComponent,
         ListValueDetailComponent,
+      
     ],
     imports: [
         CommonModule,
@@ -22,7 +23,8 @@ import { Dbmt04Service } from "./dbmt04/dbmt04.service";
         SharedModule,
     ],
     providers: [
-        Dbmt04Service
+        Dbmt04Service,
+       
     ]
 })
 export class DbModule {
