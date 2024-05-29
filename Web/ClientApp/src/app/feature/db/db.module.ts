@@ -8,9 +8,6 @@ import { ListGroupDetailComponent } from './dbmt04/list-group-detail/list-group-
 import { ListValueComponent } from "./dbmt04/list-value/list-value.component";
 import { ListValueDetailComponent } from './dbmt04/list-value-detail/list-value-detail.component';
 import { Dbmt04Service } from "./dbmt04/dbmt04.service";
-import { LangListComponent } from "./dbmt20/lang-list/lang-list.component";
-import { Dbmt20Service } from "./dbmt20/dbmt20.service";
-
 
 @NgModule({
     declarations: [
@@ -18,8 +15,6 @@ import { Dbmt20Service } from "./dbmt20/dbmt20.service";
         ListGroupDetailComponent,
         ListValueComponent,
         ListValueDetailComponent,
-        LangListComponent,
-        
     ],
     imports: [
         CommonModule,
@@ -27,8 +22,7 @@ import { Dbmt20Service } from "./dbmt20/dbmt20.service";
         SharedModule,
     ],
     providers: [
-        Dbmt04Service,
-        Dbmt20Service
+        Dbmt04Service
     ]
 })
 export class DbModule {

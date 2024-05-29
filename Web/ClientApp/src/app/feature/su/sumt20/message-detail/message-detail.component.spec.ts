@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LangListComponent } from './lang-list.component';
+import { MessageDetailComponent } from './message-detail.component';
 
-describe('LangListComponent', () => {
-  let component: LangListComponent;
-  let fixture: ComponentFixture<LangListComponent>;
+describe('MessageDetailComponent', () => {
+  let component: MessageDetailComponent;
+  let fixture: ComponentFixture<MessageDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LangListComponent]
+      declarations: [MessageDetailComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LangListComponent);
+    fixture = TestBed.createComponent(MessageDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,51 @@
+<div class="align-items-end text-right mb-2">
+    <p-confirm-dialog-ng (confirm)="save()" (cancel)="cancel()">
+        <ng-container body>
+            {{ 'message.STD00009' | translate }}
+        </ng-container>
+        <ng-container btn>
+            <p-button icon="pi pi-check" label="{{ 'label.ALL.Save' | translate }}"></p-button>
+        </ng-container>
+    </p-confirm-dialog-ng>
+  </div>
+  
+  <p-breadcrumb
+    [model]="[{ label: 'label.SUMT20.SetupMessage' | translate}, { label: 'label.ALL.Detail' | translate}]">
+  </p-breadcrumb>
+  
+  <card header="{{ 'label.ALL.Detail' | translate }}" class="p-fluid">
+    <form [formGroup]="messageForm.form">
+        <div class="grid mt-2">
+            <div class="col-8 md:col-8 lg:col-8 xl:col-8">
+                <textbox id="messageCode" formControlName="messageCode">
+                  Message Code
+                </textbox>
+            </div>
+            <div class="col-4 md:col-4 lg:col-4 xl:col-4">
+              <div class="m-0 mb-2 flex">
+                  <label class="ng-star-inserted">
+                    <span class="text-red-500">*</span>
+                    Language
+                  </label>
+              </div>
+  
+              <p-dropdown  formControlName="languageCode"
+              [options]="language"
+              [(ngModel)]="selectedLang"
+              optionLabel="name"
+              optionValue="code"
+              placeholder="Language"
+              >
+              </p-dropdown>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="col-8 md:col-8 lg:col-8 xl:col-8">
+                <textbox id="messageDesc" formControlName="messageDesc">Message Desc</textbox>
+            </div>
+            <div class="col-4 md:col-4 lg:col-4 xl:col-4">
+                <textbox id="remark" formControlName="remark">Remark</textbox>
+            </div>
+        </div>
+    </form>
+  </card>

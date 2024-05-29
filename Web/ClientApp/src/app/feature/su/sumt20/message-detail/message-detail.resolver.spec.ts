@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { ResolveFn } from '@angular/router';
 
-import { langDetailResolver } from './lang-detail.resolver';
+import { messageDetailResolver } from './message-detail.resolver';
 
-describe('langDetailResolver', () => {
+describe('messageDetailResolver', () => {
   const executeResolver: ResolveFn<boolean> = (...resolverParameters) => 
-      TestBed.runInInjectionContext(() => langDetailResolver(...resolverParameters));
+      TestBed.runInInjectionContext(() => messageDetailResolver(...resolverParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

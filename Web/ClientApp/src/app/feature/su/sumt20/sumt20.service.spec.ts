@@ -1,14 +1,13 @@
-
 import { TestBed } from '@angular/core/testing';
 
-import { Dbmt20Service } from './dbmt20.service';
+import { Sumt20Service } from './sumt20.service';
 
-describe('Dbmt20Service', () => {
-  let service: Dbmt20Service;
+describe('Sumt20Service', () => {
+  let service: Sumt20Service;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Dbmt20Service);
+    service = TestBed.inject(Sumt20Service);
   });
 
   it('should be created', () => {

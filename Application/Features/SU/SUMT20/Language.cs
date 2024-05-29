@@ -1,16 +1,16 @@
-using Application.Common.Models;
-using Application.Interfaces;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common.Models;
+using Application.Interfaces;
+using MediatR;
 
-namespace Application.Features.DB.DBMT20
+namespace Application.Features.SU.SUMT20
 {
-    public class LanguageList
+    public class Language
     {
         public class Query : RequestPageQuery, IRequest<PageDto>
         {
@@ -31,18 +31,10 @@ namespace Application.Features.DB.DBMT20
             public async Task<PageDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 StringBuilder sql = new StringBuilder();
-                
-                                 
-                sql.AppendLine("    SELECT		lg.language_code AS \"languageCode\",");
-                sql.AppendLine("                lg.description AS \"description\",");
-                sql.AppendLine("                lg.active AS \"active\" ");
-                sql.AppendLine("    FROM		db.language lg ");
-                if (!string.IsNullOrWhiteSpace(request.Keyword))
-                {
-                    sql.AppendLine("WHERE       CONCAT(LOWER(lg.language_code), LOWER(lg.description))");
-                    sql.AppendLine("            like CONCAT('%', LOWER(@Keyword), '%')");
-                }
 
+                sql.AppendLine("    SELECT		l.language_code AS \"languageCode\"");
+                sql.AppendLine("    FROM   db.language l  ");
+                sql.AppendLine("    WHERE   l.active = true ");
                 return await _context.GetPage(sql.ToString(), new { Keyword = request.Keyword }, request, cancellationToken);
             }
         }

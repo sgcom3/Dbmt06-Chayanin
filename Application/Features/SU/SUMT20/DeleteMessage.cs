@@ -1,28 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Behaviors;
 using Application.Interfaces;
-using Domain.Entities.DB;
+using Domain.Entities.SU;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.DB.DBMT20
+namespace Application.Features.SU.SUMT20
 {
-    public class DeleteLanguage
+    public class DeleteMessage
     {
-        public class Command : ICommand
+        public class Command : IRequest
         {
-            public string LanguageCode { get; set; }
+            public string MessageCode { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly ICleanDbContext _context;
             private readonly ICurrentUserAccessor _user;
+
             public Handler(ICleanDbContext context, ICurrentUserAccessor user)
             {
                 _context = context;
@@ -31,11 +28,12 @@ namespace Application.Features.DB.DBMT20
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var group = await _context.Set<Language>().FirstOrDefaultAsync(o => o.LanguageCode == request.LanguageCode, cancellationToken);
-                group.Active = false;
-                _context.Entry(group).State = EntityState.Modified;
+                var message = await _context.Set<Message>().FirstOrDefaultAsync(m => m.MessageCode == request.MessageCode, cancellationToken);
+
+                _context.Set<Message>().Remove(message);
 
                 await _context.SaveChangesAsync(cancellationToken);
+
                 return Unit.Value;
             }
         }

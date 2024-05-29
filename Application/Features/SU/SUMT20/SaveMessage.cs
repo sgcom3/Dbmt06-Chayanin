@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,18 +9,18 @@ using Application.Behaviors;
 using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.DB;
+using Domain.Entities.SU;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.DB.DBMT04
+namespace Application.Features.SU.SUMT20
 {
-    public class SaveLanguage
+    public class SaveMessage
     {
-        public class Command : Domain.Entities.DB.Language, ICommand
+        public class Command : Message, ICommand
         {
 
         }
-
         public class Handler : IRequestHandler<Command>
         {
             private readonly ICleanDbContext _context;
@@ -30,24 +30,30 @@ namespace Application.Features.DB.DBMT04
                 _context = context;
                 _user = user;
             }
-
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 if (request.RowState == Domain.Entities.RowState.Add)
                 {
-                    var dupplicated = await _context.Set<Language>().FirstOrDefaultAsync(o => o.LanguageCode == request.LanguageCode, cancellationToken);
-                    if (dupplicated != null)
-                    {
-                        throw new RestException(HttpStatusCode.NotFound, "message.Dupplicated");
-                    }
-                    _context.Set<Domain.Entities.DB.Language>().Add(request);
+                    var dupplicated = await _context.Set<Message>().FirstOrDefaultAsync(m => m.MessageCode == request.MessageCode, cancellationToken);
+                    if (dupplicated != null) throw new RestException(HttpStatusCode.BadRequest, "message.Dupplicated");
+                    _context.Set<Message>().Add(request);
                 }
                 else
-                    _context.Entry(request).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                {
+                    if (await _context.Set<Message>().FirstOrDefaultAsync(m => m.MessageCode == request.MessageCode, cancellationToken) is Message messageItem)
+                    {
+                        messageItem.MessageDesc = request.MessageDesc;
+                        messageItem.LanguageCode = request.LanguageCode;
+                        messageItem.Remark = request.Remark;
+                        _context.Entry(messageItem).State = EntityState.Modified;
+                    }
+                }
 
                 await _context.SaveChangesAsync(cancellationToken);
                 return Unit.Value;
             }
         }
+
     }
 }
+ 
