@@ -1,0 +1,111 @@
+<!-- <p>country works!</p> -->
+<div class="mt-3 d-flex text-left mb-3">
+  <h4>{{ "label.DBMT06.SetupCountry" | translate }}</h4>
+</div>
+<card [toggleable]="false">
+  <div class="grid align-items-center">
+    <div class="col-6 md:col-6 lg:col-6 xl:col-6">
+      <textbox
+        [(ngModel)]="keyword"
+        (keyup.enter)="onSearch()"
+        placeholder="{{ 'label.DBMT06.CountryCode' | translate }} / {{
+          'label.DBMT06.CountryName' | translate
+        }}"
+      >
+      </textbox>
+    </div>
+    <div class="col-6 md:col-6 lg:col-6 xl:col-6 text-end text-right">
+      <p-button
+        icon="pi pi-plus-circle"
+        (click)="form()"
+        label="{{ 'label.ALL.Add' | translate }}"
+      ></p-button>
+    </div>
+  </div>
+  <br />
+  <datatable server [value]="data">
+    <ng-template #header pTemplate="header">
+      <tr>
+        <th
+          class="text-center"
+          pSortableColumn="countryCode"
+          RouterLink="form()"
+        >
+          {{ "label.DBMT06.CountryCode" | translate
+          }}<p-sortIcon field="countryCode"></p-sortIcon>
+        </th>
+        <th class="text-center" pSortableColumn="countryName">
+          {{ "label.DBMT06.CountryName" | translate
+          }}<p-sortIcon field="countryName"></p-sortIcon>
+        </th>
+        <th class="text-left" pSortableColumn="description">
+          {{ "label.ALL.Description" | translate
+          }}<p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <th class="text-center" pSortableColumn="active">
+          {{ "label.ALL.Active" | translate
+          }}<p-sortIcon field="active"></p-sortIcon>
+        </th>
+        <th aria-label="listValue"></th>
+        <th aria-label="delete"></th>
+      </tr>
+    </ng-template>
+    <ng-template
+      #body
+      pTemplate="body"
+      let-dataItem="dataItem"
+      let-rowIndex="rowIndex"
+    >
+      <tr>
+        <td class="text-center">
+          <a
+            [routerLink]="['/db/dbmt06/detail']"
+            [state]="{
+              countryCode: dataItem.countryCode,
+              systemControl: dataItem.systemControl
+            }"
+          >
+            {{ dataItem.countryCode }}
+          </a>
+        </td>
+        <td class="text-center">
+          {{ dataItem.countryName }}
+        </td>
+        <td class="text-left">
+          {{ dataItem.description }}
+        </td>
+        <td class="text-center">
+          <i
+            class="pi {{
+              dataItem.active ? 'pi-check active-icon' : 'pi-ban p-error'
+            }}"
+          ></i>
+        </td>
+        <!-- <td class="text-center">
+                    <a [routerLink]="['/db/dbmt04/value']"
+                        [state]="{groupCode : dataItem.groupCode, canInsert : dataItem.canInsert, canDelete : dataItem.canDelete, canEdit : dataItem.canEdit}">
+                        <p-button [text]="true" icon="fas fa-list-ul"></p-button>
+                    </a>
+                </td> -->
+        <td class="text-center">
+          <p-confirm-dialog-ng
+            (confirm)="remove(dataItem.countryCode)"
+            (cancel)="cancel()"
+          >
+            <ng-container body>
+              {{ "message.STD00003" | translate }}
+            </ng-container>
+            <ng-container btn>
+              <p-button
+                [text]="true"
+                severity="danger"
+                icon="far fa-trash-alt"
+                [disabled]="dataItem.systemControl"
+              ></p-button>
+            </ng-container>
+          </p-confirm-dialog-ng>
+        </td>
+      </tr>
+    </ng-template>
+  </datatable>
+</card>

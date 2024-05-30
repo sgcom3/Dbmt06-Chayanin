@@ -1,0 +1,53 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { EntityBase } from '@app/models/entityBase';
+
+export class Country extends EntityBase {
+  countryCode: string = null;
+  telCountryCode: string = null;
+  active: boolean = true;
+  zoneId: number = null;
+  currencyCode: string = null;
+  trunkPrefix: string = null;
+  description: string = null;
+  countryImage: number = null;
+  territoryCode: string = null;
+  interfaceMappingCode: string = null;
+  isEdit: any = null;
+  markToEdit: any = null;
+  countryName: string = null;
+  territoryName: string = null;
+  currencyName: string = null;
+}
+
+export class CountryLang extends EntityBase {
+  countrycode: string = null;
+  languagecode: string = null;
+  countryname: string = null;
+}
+
+@Injectable()
+export class Dbmt06Service {
+  constructor(private http: HttpClient) {}
+
+  getCountries(page: any, query: string) {
+    const filter = Object.assign(query, page);
+    return this.http.get<any>('dbmt06/Countries', { params: filter });
+  }
+
+  getCountryByCountryCode(code: string) {
+    return this.http.get<Country>('dbmt06/GetCountryByCountryCode', {
+      params: { countryCode: code },
+    });
+  }
+
+  deleteCountry(code: string) {
+    return this.http.delete('dbmt06/DeleteCountry', {
+      params: { countryCode: code },
+    });
+  }
+
+  saveCountry(dbCountry: Country) {
+    return this.http.post('dbmt04/SaveCountry', dbCountry);
+  }
+}
