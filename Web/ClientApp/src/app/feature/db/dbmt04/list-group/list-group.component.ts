@@ -9,7 +9,7 @@ import { NotifyService } from '@app/core/services/notify.service';
 @Component({
   selector: 'app-list-group',
   templateUrl: './list-group.component.html',
-  styleUrl: './list-group.component.scss'
+  styleUrl: './list-group.component.scss',
 })
 export class ListGroupComponent implements OnInit {
   initialPageSort = new PageCriteria(
@@ -17,16 +17,17 @@ export class ListGroupComponent implements OnInit {
   );
   keyword: string = '';
   data: PaginatedDataSource<any, any>;
-  
+
   constructor(
     private router: Router,
     private db: Dbmt04Service,
     private save: SaveDataService,
-    private ms: NotifyService,
-  ) { }
+    private ms: NotifyService
+  ) {}
 
   ngOnInit(): void {
-    this.initialPageSort = this.save.retrive('dbmt04page') ?? this.initialPageSort;
+    this.initialPageSort =
+      this.save.retrive('dbmt04page') ?? this.initialPageSort;
     this.keyword = this.save.retrive('dbmt04') ?? '';
     this.data = new PaginatedDataSource<any, any>(
       (request, query) => this.db.getSearchListGroup(request, query),
@@ -52,8 +53,7 @@ export class ListGroupComponent implements OnInit {
     }
   }
 
-  cancel() {
-  }
+  cancel() {}
 
   ngOnDestroy() {
     this.save.save(this.keyword, 'dbmt04');

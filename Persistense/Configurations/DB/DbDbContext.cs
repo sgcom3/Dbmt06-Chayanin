@@ -1,3 +1,4 @@
+﻿
 ﻿using Application.Interfaces;
 using Domain.Entities.DB;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,11 @@ namespace Persistense
         public DbSet<ListValueLang> ListValueLangs { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LanguageLang> LanguageLangs { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<CountryLang> CountryLangs { get; set; }
+        public DbSet<Territory> Territories { get; set; }
+        public DbSet<TerritoryLang> TerritoryLangs { get; set; }
+        public DbSet<CurrencyLang> CurrencyLangs { get; set; }
 
 
     }

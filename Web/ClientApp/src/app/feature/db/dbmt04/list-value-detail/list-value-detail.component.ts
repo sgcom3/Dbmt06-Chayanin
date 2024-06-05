@@ -13,9 +13,12 @@ import { NotifyService } from '@app/core/services/notify.service';
 @Component({
   selector: 'app-list-value-detail',
   templateUrl: './list-value-detail.component.html',
-  styleUrl: './list-value-detail.component.scss'
+  styleUrl: './list-value-detail.component.scss',
 })
-export class ListValueDetailComponent extends SubscriptionDisposer implements OnInit {
+export class ListValueDetailComponent
+  extends SubscriptionDisposer
+  implements OnInit
+{
   master = { langCodes: [] as any[] };
   dbListValue: ListValue = { listValueLangs: [] } as ListValue;
 
@@ -32,13 +35,13 @@ export class ListValueDetailComponent extends SubscriptionDisposer implements On
     private util: FormUtilService,
     private ms: NotifyService,
     private modal: ModalService,
-    private db: Dbmt04Service,
+    private db: Dbmt04Service
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data : any) => {
+    this.route.data.subscribe((data: any) => {
       this.dbListValue = data.dbmt04.detail;
       this.groupCode = data.dbmt04.groupCode;
       this.master.langCodes = data.dbmt04.master.langCodes;
@@ -58,48 +61,60 @@ export class ListValueDetailComponent extends SubscriptionDisposer implements On
       sequence: null,
       // interfaceMappingCode: [null, [Validators.maxLength(20)]],
       active: true,
-      color: null
-    })
+      color: null,
+    });
     return fg;
   }
 
   createListValueLangForm(valueLang: ListValueLang) {
     const fg = this.fb.group({
-      valueText: [null, [Validators.required]]
+      valueText: [null, [Validators.required]],
     });
     return fg;
   }
 
   rebuildForm() {
-    this.dbListValueDataSource = new FormDatasource<ListValue>(this.dbListValue, this.createListValueForm());
+    this.dbListValueDataSource = new FormDatasource<ListValue>(
+      this.dbListValue,
+      this.createListValueForm()
+    );
     this.dbListValueDataSource.form.markAsPristine();
 
     this.dbListValueLangDataSources = [];
-    this.master.langCodes.forEach(lang => {
-      let language = this.dbListValue.listValueLangs.find(x => x.languageCode == lang.value);
+    this.master.langCodes.forEach((lang) => {
+      let language = this.dbListValue.listValueLangs.find(
+        (x) => x.languageCode == lang.value
+      );
       if (!language) {
         language = new ListValueLang();
         language.languageCode = lang.value;
         language.groupCode = this.groupCode;
       }
       language.langName = lang.text;
-      const langDataSource = new FormDatasource<ListValueLang>(language, this.createListValueLangForm(language));
+      const langDataSource = new FormDatasource<ListValueLang>(
+        language,
+        this.createListValueLangForm(language)
+      );
       this.dbListValueLangDataSources.push(langDataSource);
 
       if (!this.canEdit) {
         this.dbListValueDataSource.form.disable();
-        this.dbListValueLangDataSources.forEach(x => {
+        this.dbListValueLangDataSources.forEach((x) => {
           x.form.disable();
-        })
+        });
+      } else if (this.dbListValue.rowState != RowState.Add) {
+        this.dbListValueDataSource.form.controls['groupCode'].disable({
+          emitEvent: false,
+        });
+        this.dbListValueDataSource.form.controls['value'].disable({
+          emitEvent: false,
+        });
+      } else {
+        this.dbListValueDataSource.form.controls['groupCode'].disable({
+          emitEvent: false,
+        });
       }
-      else if (this.dbListValue.rowState != RowState.Add) {
-        this.dbListValueDataSource.form.controls['groupCode'].disable({ emitEvent: false });
-        this.dbListValueDataSource.form.controls['value'].disable({ emitEvent: false });
-      }
-      else {
-        this.dbListValueDataSource.form.controls['groupCode'].disable({ emitEvent: false });
-      }
-    })
+    });
   }
 
   save() {
@@ -107,8 +122,10 @@ export class ListValueDetailComponent extends SubscriptionDisposer implements On
     this.util.markFormGroupTouched(this.dbListValueDataSource.form);
     if (this.dbListValueDataSource.form.invalid) invalid = true;
 
-    if (this.dbListValueLangDataSources.some(source => source.form.invalid)) {
-      this.dbListValueLangDataSources.map(source => this.util.markFormGroupTouched(source.form));
+    if (this.dbListValueLangDataSources.some((source) => source.form.invalid)) {
+      this.dbListValueLangDataSources.map((source) =>
+        this.util.markFormGroupTouched(source.form)
+      );
       invalid = true;
     }
 
@@ -118,35 +135,45 @@ export class ListValueDetailComponent extends SubscriptionDisposer implements On
     }
     this.dbListValueDataSource.updateValue();
 
-    this.dbListValueLangDataSources.forEach(dataSource => {
+    this.dbListValueLangDataSources.forEach((dataSource) => {
       dataSource.updateValue();
-    })
+    });
 
-    const valueLangs = this.dbListValueLangDataSources.filter(source => !source.isNormal).map(source => source.model);
+    const valueLangs = this.dbListValueLangDataSources
+      .filter((source) => !source.isNormal)
+      .map((source) => source.model);
     this.dbListValue.listValueLangs = valueLangs;
 
-
-    this.db.saveListValue(this.dbListValue).pipe(
-      switchMap(() => this.db.getListValueByGroupAndValue(this.dbListValue.groupCode, this.dbListValue.value))
-    ).subscribe(data => {
-      this.dbListValue = data;
-      this.rebuildForm();
-      this.ms.success('message.STD00006');
-    })
+    this.db
+      .saveListValue(this.dbListValue)
+      .pipe(
+        switchMap(() =>
+          this.db.getListValueByGroupAndValue(
+            this.dbListValue.groupCode,
+            this.dbListValue.value
+          )
+        )
+      )
+      .subscribe((data) => {
+        this.dbListValue = data;
+        this.rebuildForm();
+        this.ms.success('message.STD00006');
+      });
   }
 
   public get isDirty() {
-    return this.dbListValueDataSource.form.dirty || this.dbListValueLangDataSources.some(source => source.form.dirty);
+    return (
+      this.dbListValueDataSource.form.dirty ||
+      this.dbListValueLangDataSources.some((source) => source.form.dirty)
+    );
   }
 
   canDeactivate(): Observable<boolean> | boolean {
     if (this.isDirty) {
-      return from(this.modal.confirm("message.STD00002"));
+      return from(this.modal.confirm('message.STD00002'));
     }
     return of(true);
   }
 
-  cancel() {
-
-  }
+  cancel() {}
 }

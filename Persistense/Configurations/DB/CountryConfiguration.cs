@@ -1,4 +1,4 @@
-﻿using Domain.Entities.DB;
+﻿﻿using Domain.Entities.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -15,6 +15,7 @@ namespace Persistense.Configurations.DB
         {
             base.Configure(builder);
             builder.HasKey(e => e.CountryCode);
+            builder.HasMany(e => e.CountryLangs).WithOne().HasForeignKey(e => new { e.CountryCode});
             builder.ToTable("country", "db");
         }
     }

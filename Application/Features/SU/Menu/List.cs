@@ -47,14 +47,14 @@ public class List
                 from su.menu m
                 left join su.program p on p.program_code = m.program_code
                 where 1=1
-                --m.system_code = 'ccs'  
+                --m.system_code = 'ccs'
                 and m.active = true
-                and  exists(select 'x'	
-                              from su.profile_menu mp 	
-                              inner join su.user_profile p on p.profile_code  = mp.profile_code 	
-                              where mp.menu_code  = m.menu_code 	
+                and  exists(select 'x'
+                              from su.profile_menu mp
+                              inner join su.user_profile p on p.profile_code  = mp.profile_code
+                              where mp.menu_code  = m.menu_code
                               --and p.user_id = :UserId 
-                                    ) 	
+                                    )
                 order by m.menu_code
             ");
 
@@ -79,6 +79,7 @@ public class List
             this.GetMenus(root, menus, null);
             return root.Items;
         }
+
 
         public void GetMenus(MenuVm parent, IEnumerable<MenuVm> menus, string menuCode)
         {
