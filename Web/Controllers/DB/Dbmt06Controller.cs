@@ -34,11 +34,13 @@ namespace Web.Controllers.DB.DBMT06
             return Ok(await Mediator.Send(model));
         }
 
-        [HttpGet("master")]
-        public async Task<IActionResult> Get([FromQuery] Application.Features.DB.DBMT06.Master.Query model)
+        [HttpGet("getRegion")]
+        public async Task<IActionResult> Get([FromQuery] getRegion.Query model)
         {
             return Ok(await Mediator.Send(model));
         }
+
+
 
 
     }

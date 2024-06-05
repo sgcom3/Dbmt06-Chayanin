@@ -14,7 +14,8 @@ namespace Persistense
         public DbSet<ListValueLang> ListValueLangs { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LanguageLang> LanguageLangs { get; set; }
-
+        public DbSet<Country> Country { get; set; }
+        public DbSet <CountryLang> CountryLangs { get; set; }
 
     }
 }
