@@ -26,7 +26,9 @@ export class MiddlewareInterceptor implements HttpInterceptor {
 
     private convertStringToDate(data: any) {
         for (const key in data) {
-            if (data[key] && typeof data[key] != 'boolean' && typeof data[key] != 'number') {
+            if (data[key] && typeof data[key] != 'boolean'
+             && typeof data[key] != 'number'
+             && typeof data[key] != 'string') {
                 const date = new Date(data[key])
 
                 if (!isNaN(date.getTime())) data[key] = date as Date

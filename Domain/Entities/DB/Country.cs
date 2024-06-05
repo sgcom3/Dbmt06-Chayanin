@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +18,11 @@ namespace Domain.Entities.DB
         public int? CountryImage { get; set; }
         public string? TerritoryCode { get; set; }
         public string? InterfaceMappingCode { get; set; }
+        //public string CountryName { get; set; }
+        public ICollection<CountryLang> CountryLangs { get; set; }
+        // public string? TerritoryName { get; set; }
+        // public string? CurrencyName { get; set; }
+
 
     }
 }

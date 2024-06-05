@@ -1,3 +1,4 @@
+﻿
 ﻿using Application.Interfaces;
 using Domain.Entities.DB;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace Persistense
         public DbSet<LanguageLang> LanguageLangs { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet <CountryLang> CountryLangs { get; set; }
+
 
     }
 }

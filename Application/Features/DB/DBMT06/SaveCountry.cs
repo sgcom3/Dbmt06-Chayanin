@@ -1,4 +1,4 @@
-﻿using Application.Behaviors;
+﻿﻿using Application.Behaviors;
 using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.DB;
@@ -40,10 +40,25 @@ namespace Application.Features.DB.DBMT06
                     {
                         throw new RestException(HttpStatusCode.NotFound, "message.Dupplicated");
                     }
-                    _context.Set<Domain.Entities.DB.Country>().Add(request);
+                    if (request.CountryLangs.Any() && request.CountryLangs.Any())
+                    {
+                        foreach (var item in request.CountryLangs)
+                        {
+                            item.CountryCode = request.CountryCode;
+                        }
+                    }
+                    _context.Set<Country>().Add(request);
                 }
                 else
+                {
+                    foreach (var lang in request.CountryLangs)
+                    {
+                        _context.Entry(lang).Property(o => o.CountryName).IsModified = true;
+                    }
+
+                    _context.Set<Country>().Attach(request);
                     _context.Entry(request).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                }
 
                 await _context.SaveChangesAsync(cancellationToken);
                 return Unit.Value;

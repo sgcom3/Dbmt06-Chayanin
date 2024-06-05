@@ -14,6 +14,7 @@ export class MenuComponent {
     constructor(public layoutService: LayoutService, private menuService: MenuService) {
         this.menuService.getMenuList().subscribe((item) => {
             this.model = item
+            console.log(item)
         })
     }
 }

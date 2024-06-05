@@ -1,14 +1,20 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SubscriptionDisposer } from '@app/shared/components/subscription-disposer';
-import { Country, Dbmt06Service } from '../dbmt06.service';
+import { Country, CountryLang, Dbmt06Service } from '../dbmt06.service';
 import { FormDatasource } from '@app/shared/services/base.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NotifyService } from '@app/core/services/notify.service';
 import { FormUtilService } from '@app/shared/services/form-util.service';
 import { ModalService } from '@app/shared/components/modal/modal.service';
-import { Observable, from, of, switchMap } from 'rxjs';
+import { Observable, from, map, of, switchMap } from 'rxjs';
 import { RowState } from '@app/shared/rowstate.enum';
+
+import { Router } from '@angular/router';
+
+import { SaveDataService } from '@app/core/services/save-data.service';
+import { PageCriteria } from '@app/shared/components/table-server/page';
+import { PaginatedDataSource } from '@app/shared/components/table-server/server-datasource';
 
 @Component({
   selector: 'x-country-detail',
@@ -19,12 +25,23 @@ export class CountryDetailComponent
   extends SubscriptionDisposer
   implements OnInit
 {
+
+  //dbCountryList: Country = { countryLangs: [] } as Country;
+  master = { langCodes: [] as any[] };
   dbCountryForm!: FormDatasource<Country>;
-  Country: Country = {} as Country;
-  regions: any = [];
-  regionTemp: any = [];
-  currencies: any = [];
-  currencyTemp: any = [];
+  dbCountryLangForm: FormDatasource<CountryLang>[] = [];
+  country: Country = { countryLangs: [] } as Country;
+  countryCode: string;
+  regions: any[] = [];
+  regionTemp: any;
+  currencies: any[] = [];
+  currencyTemp: any;
+  systemControl: any;
+  regionOptions: any[] = [];
+  regionList: any[] = [];
+  currencyOptions: { label: string; value: string }[] = [];
+
+  saving = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,91 +50,104 @@ export class CountryDetailComponent
     private ms: NotifyService,
     private db: Dbmt06Service,
     private modal: ModalService,
-    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {
     super();
 
-    this.dbCountryForm = new FormDatasource<Country>(
-      this.Country,
-      this.createDbCountry()
-    );
+    // this.dbCountryForm = new FormDatasource<Country>(
+    //   this.Country,
+    //   this.createDbCountry()
+    // );
   }
 
   ngOnInit(): void {
-    //this.createDbCountry();
+    
+    this.createDbCountry();
     this.route.data.subscribe((data: any) => {
       console.log('data:', data);
 
       if (data.dbmt06 && data.dbmt06.detail) {
-        this.Country = data.dbmt06.detail;
+        this.country = data.dbmt06.detail;
 
-        this.regions = data.dbmt06.regions || [];
+        this.regions = Array.isArray(data.dbmt06.regions)
+          ? data.dbmt06.regions
+          : [];
         this.regionTemp = [...this.regions];
 
-        this.currencies = data.dbmt06.currencies || [];
+        this.currencies = Array.isArray(data.dbmt06.currencies)
+          ? data.dbmt06.currencies
+          : [];
         this.currencyTemp = [...this.currencies];
 
         this.rebuildForm();
         this.cdr.markForCheck();
-        // if (data.dbmt06 && data.dbmt06.regions) {
-        //   this.regions = data.dbmt06.regions;
-        //   this.regionTemp = JSON.parse(JSON.stringify(this.regions));
-        // } else {
-        //   this.regions = [];
-        //   this.regionTemp = [];
-        // }
-
-        // if (data.dbmt06 && data.dbmt06.currencies) {
-        //   this.currencies = data.dbmt06.currencies;
-        //   this.currencyTemp = JSON.parse(JSON.stringify(this.currencies));
-        // } else {
-        //   this.currencies = [];
-        //   this.currencyTemp = [];
-        // }
       }
-      // this.rebuildForm();
-      // this.cdr.markForCheck(); // Mark for check
+
     });
+    this.loadRegion();
   }
 
+  loadRegion(): void {
+    this.db.getRegionOptions().subscribe((regionList) => {
+      this.regionList = regionList.rows.map(row => ({
+        label: row.regionCode,
+        value: row.regionCode 
+      }));
+    });
+  }
+  
+
   createDbCountry() {
-    // need Validation check later
     return this.fb.group({
       countryCode: [null, [Validators.required, Validators.maxLength(20)]],
-      countryName: [null, [Validators.required]],
-      description: [null, [Validators.maxLength(200)]],
+      countryName: [null, [Validators.required, Validators.maxLength(300)]],
+      description: [null, [Validators.maxLength(300)]],
       active: [true],
       region: [null, [Validators.maxLength(20)]],
-      currencyData: [null, [Validators.maxLength(20)]],
-      telCountryCode: [null],
-      trunkPrefix: [null],
-      interfaceMappingCode: [null],
+      currency: [null, [Validators.maxLength(20)]],
+      telCountryCode: [null, Validators.pattern(/^\+\d{0,9}$/)],
+      trunkPrefix: [null, [Validators.maxLength(10)]],
+      interfaceMappingCode: [null, [Validators.maxLength(20)]],
     });
-    // return fg;
+    //return fg;
+  }
+
+  createCountryLangForm(valueLang: CountryLang) {
+    const fg = this.fb.group({
+      countryName: [null, [Validators.required, Validators.maxLength(300)]],
+    });
+    return fg;
   }
 
   rebuildForm() {
     this.dbCountryForm = new FormDatasource<Country>(
-      this.Country,
+      this.country,
       this.createDbCountry()
     );
-
-    console.log('Form Before Patch:', this.dbCountryForm.form.value);
-    this.dbCountryForm.form.patchValue(this.Country); // Patch form with Country data
-    console.log('Form After Patch:', this.dbCountryForm.form.value);
+    this.dbCountryForm.form.patchValue(this.country); // Patch form with Country data
 
     // if edit
-    this.dbCountryForm.form.markAsPristine();
-
-    if (this.Country.rowState != RowState.Add) {
+    if (this.country.rowState != RowState.Add) {
       this.dbCountryForm.form.controls['countryCode'].disable();
     }
-    this.dbCountryForm.form.controls['countryCode'].valueChanges
-      .pipe()
-      .subscribe((x) => {
-        this.regionChange(x);
-        this.currencyChange(x);
-      });
+
+    this.dbCountryForm.form.markAsPristine();
+    this.dbCountryLangForm = [];
+    this.master.langCodes.forEach((lang) => {
+      let language = this.country.countryLangs.find(
+        (x) => x.languagecode == lang.value
+      );
+      if (!language) {
+        language = new CountryLang();
+        language.languagecode = lang.value;
+        language.countrycode = this.countryCode;
+      }
+      const langDataSource = new FormDatasource<CountryLang>(
+        language,
+        this.createCountryLangForm(language)
+      );
+      this.dbCountryLangForm.push(langDataSource);
+    });
   }
 
   save() {
@@ -125,28 +155,48 @@ export class CountryDetailComponent
     this.util.markFormGroupTouched(this.dbCountryForm.form);
     if (this.dbCountryForm.form.invalid) invalid = true;
 
+    if (this.dbCountryLangForm.some((source) => source.form.invalid)) {
+      this.dbCountryLangForm.map((source) =>
+        this.util.markFormGroupTouched(source.form)
+      );
+      invalid = true;
+    }
+
     if (invalid) {
       this.ms.warning('message.STD00027', ['required data']);
       return;
     }
 
     this.dbCountryForm.updateValue();
+
+    this.dbCountryLangForm.forEach((dataSource) => {
+      dataSource.updateValue();
+    });
+
+    const countryLangs = this.dbCountryLangForm
+      .filter((source) => !source.isNormal)
+      .map((source) => source.model);
+    this.country.countryLangs = countryLangs;
+
     this.db
-      .saveCountry(this.Country)
+      .saveCountry(this.country)
       .pipe(
         switchMap(() =>
-          this.db.getCountryByCountryCode(this.Country['countryCode'])
+          this.db.getCountryByCountryCode(this.country.countryCode)
         )
       )
       .subscribe((res) => {
-        this.Country = res;
+        this.country = res;
         this.rebuildForm();
         this.ms.success('message.STD00006');
       });
   }
 
   public get isDirty() {
-    return this.dbCountryForm.form.dirty;
+    return (
+      this.dbCountryForm.form.dirty ||
+      this.dbCountryLangForm.some((source) => source.form.dirty)
+    );
   }
 
   canDeactivate(): Observable<boolean> | boolean {
@@ -157,58 +207,4 @@ export class CountryDetailComponent
   }
 
   cancel() {}
-
-  regionChange(value) {
-    let regionModel = {
-      territoryName: value,
-    };
-    let hasValue = this.regions.find(
-      (x) => x.territoryName == this.dbCountryForm.form.controls['region'].value
-    );
-    let hasValueTemp = this.regionTemp.find(
-      (x) => x.territoryName == this.dbCountryForm.form.controls['region'].value
-    );
-    this.regions = [...this.regionTemp, regionModel];
-    if (
-      hasValueTemp &&
-      this.dbCountryForm.form.controls['region'].value &&
-      !hasValue
-    ) {
-      this.dbCountryForm.form.controls['region'].setValue(value);
-    } else if (
-      hasValue &&
-      this.dbCountryForm.form.controls['region'].value &&
-      hasValueTemp == undefined
-    ) {
-      this.dbCountryForm.form.controls['region'].setValue(value);
-    }
-  }
-
-  currencyChange(value) {
-    let currencyModel = {
-      currencyData: value,
-    };
-    let hasValue = this.currencies.find(
-      (x) =>
-        x.currencyData == this.dbCountryForm.form.controls['currencyData'].value
-    );
-    let hasValueTemp = this.currencyTemp.find(
-      (x) =>
-        x.currencyData == this.dbCountryForm.form.controls['currencyData'].value
-    );
-    this.currencies = [...this.currencyTemp, currencyModel];
-    if (
-      hasValueTemp &&
-      this.dbCountryForm.form.controls['currencyData'].value &&
-      !hasValue
-    ) {
-      this.dbCountryForm.form.controls['currencyData'].setValue(value);
-    } else if (
-      hasValue &&
-      this.dbCountryForm.form.controls['currencyData'].value &&
-      hasValueTemp == undefined
-    ) {
-      this.dbCountryForm.form.controls['currencyData'].setValue(value);
-    }
-  }
 }

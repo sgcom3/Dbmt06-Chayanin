@@ -1,4 +1,4 @@
-﻿using Application.Common.Models;
+﻿﻿using Application.Common.Models;
 using Application.Interfaces;
 using MediatR;
 using System;
@@ -45,14 +45,18 @@ namespace Application.Features.DB.DBMT06
                 sql.AppendLine("       INNER JOIN db.country_lang cl ON cl.country_code = ct.country_code");
                 sql.AppendLine("WHERE  ct.active = true");
 
+
                 if (!string.IsNullOrWhiteSpace(request.Keyword))
                 {
                     sql.AppendLine("AND   CONCAT(LOWER(ct.country_code), LOWER(ct.description))");
                     sql.AppendLine("      LIKE CONCAT('%', LOWER(@Keyword), '%')");
+
                 }
+
+                sql.AppendLine("    ORDER BY    ct.country_code asc");
 
                 return await _context.GetPage(sql.ToString(), new { Keyword = request.Keyword }, request, cancellationToken);
             }
         }
     }
-}
+} 

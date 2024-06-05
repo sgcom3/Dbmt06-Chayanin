@@ -38,17 +38,10 @@
           {{ "label.DBMT06.Region" | translate }}
         </label>
         <p-dropdown
-          optionLabel="territoryName"
-          optionValue="territoryName"
-          [options]="regions"
+          [options]="regionOptions"
           formControlName="region"
-          [showClear]="true"
-          [filter]="true"
-          class="p-dropdown-custom"
+          placeholder="Please Select"
         >
-          <ng-template pTemplate="selectedItem" let-selectedOption>
-            {{ selectedOption?.territoryName }}
-          </ng-template>
         </p-dropdown>
       </div>
       <div class="col-3 md:col-3 lg:col-3 xl:col-3">
@@ -68,17 +61,10 @@
           {{ "label.DBMT06.CurrencyData" | translate }}
         </label>
         <p-dropdown
-          optionLabel="currencyData"
-          optionValue="currencyData"
-          [options]="currencies"
-          formControlName="currencyData"
-          [showClear]="true"
-          [filter]="true"
-          class="p-dropdown-custom"
+          [options]="currencyOptions"
+          formControlName="currency"
+          placeholder="Please Select"
         >
-          <ng-template pTemplate="selectedItem" let-selectedOption>
-            {{ selectedOption?.currencyData }}
-          </ng-template>
         </p-dropdown>
       </div>
 

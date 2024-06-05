@@ -1,4 +1,4 @@
-﻿using Application.Exceptions;
+﻿﻿using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.DB;
 using MediatR;
@@ -29,7 +29,7 @@ namespace Application.Features.DB.DBMT06
             }
             public async Task<Country> Handle(Query request, CancellationToken cancellationToken)
             {
-                var country = await _context.Set<Country>().AsNoTracking().FirstOrDefaultAsync(o => o.CountryCode == request.CountryCode, cancellationToken);
+                var country = await _context.Set<Country>().AsNoTracking().Include(x=>x.CountryLangs).FirstOrDefaultAsync(o => o.CountryCode == request.CountryCode, cancellationToken);
                 if (country == null) throw new RestException(System.Net.HttpStatusCode.BadRequest, "not found");
                 return country;
             }
