@@ -34,6 +34,17 @@ namespace Web.Controllers.DB.DBMT06
             return Ok(await Mediator.Send(model));
         }
 
+<<<<<<< HEAD
+=======
+        [HttpGet("getRegion")]
+        public async Task<IActionResult> Get([FromQuery] getRegion.Query model)
+        {
+            return Ok(await Mediator.Send(model));
+        }
+
+>>>>>>> 1134eafab1173c124c12c377177a6be9c24e6935
+
+
 
     }
 }

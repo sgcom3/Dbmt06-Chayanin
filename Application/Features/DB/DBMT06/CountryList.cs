@@ -2,8 +2,6 @@
 using Application.Interfaces;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +30,22 @@ namespace Application.Features.DB.DBMT06
             {
                 StringBuilder sql = new StringBuilder();
 
+                sql.AppendLine("SELECT ct.country_code AS \"countryCode\",");
+                sql.AppendLine("       ct.tel_country_code AS \"telCountryCode\",");
+                sql.AppendLine("       ct.active AS \"active\",");
+                sql.AppendLine("       cl.country_name AS \"countryName\",");
+                sql.AppendLine("       ct.zone_id as \"zoneId\",");
+                sql.AppendLine("       ct.currency_code as \"currencyCode\",");
+                sql.AppendLine("       ct.trunk_prefix as \"trunkPrefix\",");
+                sql.AppendLine("       ct.description as \"description\",");
+                sql.AppendLine("       ct.country_image as \"countryImage\",");
+                sql.AppendLine("       ct.territory_code as \"territoryCode\",");
+                sql.AppendLine("       ct.interface_mapping_code as \"interfaceMappingCode\"");
+                sql.AppendLine("FROM   db.country ct");
+                sql.AppendLine("       INNER JOIN db.country_lang cl ON cl.country_code = ct.country_code");
+                sql.AppendLine("WHERE  ct.active = true");
 
+<<<<<<< HEAD
                 sql.AppendLine("    SELECT DISTINCT		ct.country_code AS \"countryCode\",");
                 sql.AppendLine("                ct.tel_country_code AS \"telCountryCode\",");
                 sql.AppendLine("                ct.active AS \"active\",");
@@ -55,6 +68,12 @@ namespace Application.Features.DB.DBMT06
                 {
                     sql.AppendLine("WHERE       CONCAT(LOWER(ct.country_code),LOWER(cl.country_name))");
                     sql.AppendLine("            LIKE LOWER(CONCAT('%',@Keyword, '%'))");
+=======
+                if (!string.IsNullOrWhiteSpace(request.Keyword))
+                {
+                    sql.AppendLine("AND   CONCAT(LOWER(ct.country_code), LOWER(ct.description))");
+                    sql.AppendLine("      LIKE CONCAT('%', LOWER(@Keyword), '%')");
+>>>>>>> 1134eafab1173c124c12c377177a6be9c24e6935
                 }
 
                 sql.AppendLine("    ORDER BY    ct.country_code asc");
