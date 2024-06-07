@@ -42,7 +42,7 @@ namespace Application.Features.DB.DBMT06
                 sql.AppendLine("       ct.territory_code as \"territoryCode\",");
                 sql.AppendLine("       ct.interface_mapping_code as \"interfaceMappingCode\"");
                 sql.AppendLine("FROM   db.country ct");
-                sql.AppendLine("       INNER JOIN db.country_lang cl ON cl.country_code = ct.country_code");
+                sql.AppendLine("       LEFT JOIN db.country_lang cl ON cl.country_code = ct.country_code");
                 sql.AppendLine("WHERE  ct.active = true");
 
 
