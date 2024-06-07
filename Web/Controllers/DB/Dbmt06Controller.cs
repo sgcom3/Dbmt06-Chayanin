@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Web.Controllers.DB.DBMT06
 {
-   
+
     public class Dbmt06Controller : BaseController
     {
         [HttpGet("Countries")]
@@ -34,11 +34,18 @@ namespace Web.Controllers.DB.DBMT06
             return Ok(await Mediator.Send(model));
         }
 
+
         [HttpGet("getRegion")]
         public async Task<IActionResult> Get([FromQuery] getRegion.Query model)
         {
             return Ok(await Mediator.Send(model));
         }
+        [HttpGet("getCurrency")]
+        public async Task<IActionResult> Get([FromQuery] CurrencyList.Query model)
+        {
+            return Ok(await Mediator.Send(model));
+        }
+
 
 
 
