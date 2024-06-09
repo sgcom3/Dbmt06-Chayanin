@@ -9,12 +9,8 @@ import { FormUtilService } from '@app/shared/services/form-util.service';
 import { ModalService } from '@app/shared/components/modal/modal.service';
 import { Observable, from, map, of, switchMap } from 'rxjs';
 import { RowState } from '@app/shared/rowstate.enum';
+import { JsonPipe } from '@angular/common';
 
-import { Router } from '@angular/router';
-
-import { SaveDataService } from '@app/core/services/save-data.service';
-import { PageCriteria } from '@app/shared/components/table-server/page';
-import { PaginatedDataSource } from '@app/shared/components/table-server/server-datasource';
 
 @Component({
   selector: 'x-country-detail',
@@ -39,6 +35,7 @@ export class CountryDetailComponent
   systemControl: any;
   regionOptions: any[] = [];
   regionList: any[] = [];
+  currencyList: any[] = [];
   currencyOptions: { label: string; value: string }[] = [];
 
   saving = false;
@@ -85,13 +82,22 @@ export class CountryDetailComponent
 
     });
     this.loadRegion();
+    this.loadCurrency();
   }
 
   loadRegion(): void {
-    this.db.getRegionOptions().subscribe((regionList) => {
+    this.db.getRegion().subscribe((regionList) => {
       this.regionList = regionList.rows.map(row => ({
         label: row.regionCode,
         value: row.regionCode 
+      }));
+    });
+  }
+  loadCurrency(): void {
+    this.db.getCurrency().subscribe((currencyList) => {
+      this.currencyList = currencyList.rows.map(row => ({
+        label: row.currencyCode,
+        value: row.currencyCode 
       }));
     });
   }

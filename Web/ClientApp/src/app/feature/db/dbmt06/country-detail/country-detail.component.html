@@ -38,11 +38,13 @@
           {{ "label.DBMT06.Region" | translate }}
         </label>
         <p-dropdown
-          [options]="regionOptions"
+          [options]="regionList"
           formControlName="region"
           placeholder="Please Select"
         >
+
         </p-dropdown>
+        <div *ngIf="currencyList">{{ currencyList | json }}</div>
       </div>
       <div class="col-3 md:col-3 lg:col-3 xl:col-3">
         <textbox id="telCountryCode" formControlName="telCountryCode">{{
@@ -61,7 +63,7 @@
           {{ "label.DBMT06.CurrencyData" | translate }}
         </label>
         <p-dropdown
-          [options]="currencyOptions"
+          [options]="currencyList"
           formControlName="currency"
           placeholder="Please Select"
         >

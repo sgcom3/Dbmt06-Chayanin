@@ -92,6 +92,9 @@ export class Dbmt06Service {
     return this.http.post('dbmt06/SaveCountry', dbCountry);
   }
   getRegion(){
-    return this.http.get<any>('dbmt06/getRegions');
+    return this.http.get<any>('dbmt06/getRegion');
   }
+ getCurrency(){
+  return this.http.get<any>('dbmt06/getCurrency');
+ }
 }
