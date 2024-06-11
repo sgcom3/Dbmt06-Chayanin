@@ -38,13 +38,11 @@
           {{ "label.DBMT06.Region" | translate }}
         </label>
         <p-dropdown
-          [options]="regionList"
+          [options]="regionOptions"
           formControlName="region"
           placeholder="Please Select"
         >
-
         </p-dropdown>
-        <div *ngIf="currencyList">{{ currencyList | json }}</div>
       </div>
       <div class="col-3 md:col-3 lg:col-3 xl:col-3">
         <textbox id="telCountryCode" formControlName="telCountryCode">{{
@@ -63,7 +61,7 @@
           {{ "label.DBMT06.CurrencyData" | translate }}
         </label>
         <p-dropdown
-          [options]="currencyList"
+          [options]="currencyOptions"
           formControlName="currency"
           placeholder="Please Select"
         >
@@ -91,12 +89,27 @@
 </card>
 
 <card header="{{ 'label.ALL.Detail' | translate }}" class="p-fluid">
-  <!-- <form [formGroup]="dbCountryForm?.form"> -->
-  <form [formGroup]="dbCountryForm?.form">
+  <!-- <form [formGroup]="dbCountryForm?.form">
     <div class="col-12 md:col-12 lg:col-12 xl:col-12">
       <textbox id="countryName" formControlName="countryName">{{
         "label.DBMT06.CountryName" | translate
       }}</textbox>
     </div>
-  </form>
+  </form> -->
+
+  <div class="grid mt-2">
+    <div class="col-12 md:col-12 lg:col-12 xl:col-12">
+      <p-tabView>
+        <p-tabPanel
+          *ngFor="let language of dbCountryLangForm; let index = index"
+        >
+          <form [formGroup]="language.form">
+            <textbox formControlName="countryName">{{
+              "label.DBMT06.CountryName" | translate
+            }}</textbox>
+          </form>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
 </card>

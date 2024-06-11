@@ -69,6 +69,7 @@ namespace Web.Controllers.DB.DBMT04
         {
             return Ok(await Mediator.Send(model));
         }
+
         [HttpGet("parentGroupCode")]
         public async Task<IActionResult> Get([FromQuery] ParentGroupCode.Query model)
         {

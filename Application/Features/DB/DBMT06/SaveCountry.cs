@@ -1,4 +1,4 @@
-﻿﻿using Application.Behaviors;
+﻿using Application.Behaviors;
 using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.DB;
@@ -36,6 +36,7 @@ namespace Application.Features.DB.DBMT06
                 if (request.RowState == Domain.Entities.RowState.Add)
                 {
                     var dupplicated = await _context.Set<Country>().FirstOrDefaultAsync(o => o.CountryCode == request.CountryCode, cancellationToken);
+                    
                     if (dupplicated != null)
                     {
                         throw new RestException(HttpStatusCode.NotFound, "message.Dupplicated");
@@ -55,9 +56,11 @@ namespace Application.Features.DB.DBMT06
                     {
                         _context.Entry(lang).Property(o => o.CountryName).IsModified = true;
                     }
+                    
 
                     _context.Set<Country>().Attach(request);
-                    _context.Entry(request).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _context.Entry(request).State = EntityState.Modified;
+                    //_context.Entry(request).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 }
 
                 await _context.SaveChangesAsync(cancellationToken);

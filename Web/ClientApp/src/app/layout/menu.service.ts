@@ -63,7 +63,6 @@ export class MenuService {
         ]
 
         return this.http.get("menu").pipe(map((res: any) => ([{
-     
             items: !environment.production ? (Array.isArray(res) ? [...demo, ...res] : [...demo]) : res
         }])))
     }

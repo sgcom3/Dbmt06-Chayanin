@@ -65,14 +65,14 @@
               systemControl: dataItem.systemControl
             }"
           >
-            {{ dataItem.countryCode || 'EX' }}
+            {{ dataItem.countryCode }}
           </a>
         </td>
         <td class="text-center">
-          {{ dataItem.countryName || 'EX' }}
+          {{ dataItem.countryName }}
         </td>
         <td class="text-left">
-          {{ dataItem.description || 'EX' }}
+          {{ dataItem.description }}
         </td>
         <td class="text-center">
           <i
@@ -81,6 +81,12 @@
             }}"
           ></i>
         </td>
+        <!-- <td class="text-center">
+                    <a [routerLink]="['/db/dbmt04/value']"
+                        [state]="{groupCode : dataItem.groupCode, canInsert : dataItem.canInsert, canDelete : dataItem.canDelete, canEdit : dataItem.canEdit}">
+                        <p-button [text]="true" icon="fas fa-list-ul"></p-button>
+                    </a>
+                </td> -->
         <td class="text-center">
           <p-confirm-dialog-ng
             (confirm)="remove(dataItem.countryCode)"

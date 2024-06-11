@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,15 +9,15 @@ namespace Domain.Entities.DB
     public class Country : EntityBase
     {
         public string CountryCode { get; set; }
-        public string? TelCountryCode { get; set; }
+        public string TelCountryCode { get; set; }
         public bool Active { get; set; }
         public int? ZoneId { get; set; }
-        public string? CurrencyCode { get; set; }
-        public string? TrunkPrefix { get; set; }
-        public string? Description { get; set; }
+        public string CurrencyCode { get; set; }
+        public string TrunkPrefix { get; set; }
+        public string Description { get; set; }
         public int? CountryImage { get; set; }
-        public string? TerritoryCode { get; set; }
-        public string? InterfaceMappingCode { get; set; }
+        public string TerritoryCode { get; set; }
+        public string InterfaceMappingCode { get; set; }
         //public string CountryName { get; set; }
         public ICollection<CountryLang> CountryLangs { get; set; }
         // public string? TerritoryName { get; set; }

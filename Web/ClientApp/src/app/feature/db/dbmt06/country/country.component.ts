@@ -13,7 +13,7 @@ import { Dbmt06Service } from '../dbmt06.service';
 })
 export class CountryComponent implements OnInit {
   initialPageSort = new PageCriteria(
-    'countryCode,countryName,description,active'
+    'countryCode,telCountryCode,active,zoneId,currencyCode,trunkPrefix,description,countryImage,territoryCode,interfaceMappingCode,countryName,territoryName,currencyName'
   );
   keyword: string = '';
   data: PaginatedDataSource<any, any>;

@@ -21,6 +21,18 @@ namespace Web.Controllers.DB.DBMT06
             return Ok(await Mediator.Send(model));
         }
 
+        [HttpGet("Regions")]
+        public async Task<IActionResult> Get([FromQuery] RegionList.Query model)
+        {
+            return Ok(await Mediator.Send(model));
+        }
+
+        [HttpGet("Currencies")]
+        public async Task<IActionResult> Get([FromQuery] CurrencyList.Query model)
+        {
+            return Ok(await Mediator.Send(model));
+        }
+
         [HttpPost("SaveCountry")]
         public async Task<IActionResult> Post([FromBody] SaveCountry.Command model)
         {
@@ -34,21 +46,11 @@ namespace Web.Controllers.DB.DBMT06
             return Ok(await Mediator.Send(model));
         }
 
-
-        [HttpGet("getRegion")]
-        public async Task<IActionResult> Get([FromQuery] getRegion.Query model)
+        [HttpGet("Master")]
+        public async Task<IActionResult> Get([FromQuery] Master.Query model)
         {
             return Ok(await Mediator.Send(model));
         }
-        [HttpGet("getCurrency")]
-        public async Task<IActionResult> Get([FromQuery] CurrencyList.Query model)
-        {
-            return Ok(await Mediator.Send(model));
-        }
-
-
-
-
 
     }
 }

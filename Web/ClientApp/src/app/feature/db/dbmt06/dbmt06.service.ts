@@ -16,17 +16,17 @@ export class Country extends EntityBase {
   interfaceMappingCode: string = null;
   isEdit: any = null;
   markToEdit: any = null;
-  countryName: string = null;
+  //countryName: string = null;
   territoryName: string = null;
   currencyName: string = null;
   countryLangs: CountryLang[];
 }
 
 export class CountryLang extends EntityBase {
-  countrycode: string = null;
-  languagecode: string = null;
-  langName : string;
-  countryname: string = null;
+  countryCode: string = null;
+  languageCode: string = null;
+  langName: string;
+  countryName: string = null;
   isEdit: any = null;
   markToEdit: any = null;
 }
@@ -91,10 +91,8 @@ export class Dbmt06Service {
   saveCountry(dbCountry: Country) {
     return this.http.post('dbmt06/SaveCountry', dbCountry);
   }
-  getRegion(){
-    return this.http.get<any>('dbmt06/getRegion');
+
+  getMaster() {
+    return this.http.get<any>('dbmt06/Master');
   }
- getCurrency(){
-  return this.http.get<any>('dbmt06/getCurrency');
- }
 }

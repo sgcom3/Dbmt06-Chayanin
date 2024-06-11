@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace Domain.Entities.DB
     {
         public string CountryCode { get; set; }
         public string LanguageCode { get; set; }
-        public string? CountryName { get; set; }
+        public string CountryName { get; set; }
 
     }
 }

@@ -1,16 +1,16 @@
-﻿using System;
+using Application.Common.Models;
+using Application.Interfaces;
+using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Models;
-using Application.Interfaces;
-using MediatR;
 
-namespace Application.Features.SU.SUMT20
+namespace Application.Features.DB.DBMT06
 {
-    public class Language
+    public class CountryLang
     {
         public class Query : RequestPageQuery, IRequest<PageDto>
         {
@@ -32,11 +32,22 @@ namespace Application.Features.SU.SUMT20
             {
                 StringBuilder sql = new StringBuilder();
 
-                sql.AppendLine("    SELECT		l.language_code AS \"languageCode\"");
-                sql.AppendLine("    FROM   db.language l  ");
-                sql.AppendLine("    WHERE   l.active = true ");
+
+                sql.AppendLine("    SELECT DISTINCT		cl.country_code AS \"countryCode\",");
+                sql.AppendLine("                cl.country_name as \"countryName\" ");
+                sql.AppendLine("    FROM		db.country_lang cl ");
+                sql.AppendLine("    WHERE		cl.language_code = 'EN'");
+                
+                // if (!string.IsNullOrWhiteSpace(request.Keyword))
+                // {
+                //     sql.AppendLine("WHERE       CONCAT(LOWER(ct.country_code),LOWER(cl.country_name))");
+                //     sql.AppendLine("            LIKE LOWER(CONCAT('%',@Keyword, '%'))");
+                // }
+
+                //sql.AppendLine("    ORDER BY    ct.country_code asc");
+
                 return await _context.GetPage(sql.ToString(), new { Keyword = request.Keyword }, request, cancellationToken);
             }
         }
     }
-}
+} 

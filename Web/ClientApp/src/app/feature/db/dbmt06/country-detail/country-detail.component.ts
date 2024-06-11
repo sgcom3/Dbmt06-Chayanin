@@ -9,8 +9,7 @@ import { FormUtilService } from '@app/shared/services/form-util.service';
 import { ModalService } from '@app/shared/components/modal/modal.service';
 import { Observable, from, map, of, switchMap } from 'rxjs';
 import { RowState } from '@app/shared/rowstate.enum';
-import { JsonPipe } from '@angular/common';
-
+import { DataSource } from '@angular/cdk/collections';
 
 @Component({
   selector: 'x-country-detail',
@@ -21,7 +20,6 @@ export class CountryDetailComponent
   extends SubscriptionDisposer
   implements OnInit
 {
-
   //dbCountryList: Country = { countryLangs: [] } as Country;
   master = { langCodes: [] as any[] };
   dbCountryForm!: FormDatasource<Country>;
@@ -33,12 +31,11 @@ export class CountryDetailComponent
   currencies: any[] = [];
   currencyTemp: any;
   systemControl: any;
-  regionOptions: any[] = [];
-  regionList: any[] = [];
-  currencyList: any[] = [];
+  regionOptions: { label: string; value: string }[] = [];
   currencyOptions: { label: string; value: string }[] = [];
 
   saving = false;
+  data: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -58,12 +55,9 @@ export class CountryDetailComponent
   }
 
   ngOnInit(): void {
-    
-    this.createDbCountry();
+    //this.createDbCountry();
     this.route.data.subscribe((data: any) => {
-      console.log('data:', data);
-
-      if (data.dbmt06 && data.dbmt06.detail) {
+      if (data?.dbmt06?.detail) {
         this.country = data.dbmt06.detail;
 
         this.regions = Array.isArray(data.dbmt06.regions)
@@ -74,39 +68,38 @@ export class CountryDetailComponent
         this.currencies = Array.isArray(data.dbmt06.currencies)
           ? data.dbmt06.currencies
           : [];
+        this.countryCode = data.dbmt06.countryCode;
         this.currencyTemp = [...this.currencies];
+
+        if (data.dbmt06.master?.langCodes) {
+          this.master.langCodes = data.dbmt06.master.langCodes;
+        } else {
+          this.master.langCodes = []; // or handle the case where langCodes is not available
+        }
+
+        this.country.countryCode = this.countryCode;
+        //this.canEdit = data.dbmt06.canEdit;
 
         this.rebuildForm();
         this.cdr.markForCheck();
       }
 
-    });
-    this.loadRegion();
-    this.loadCurrency();
-  }
+      this.db.getRegionOptions().subscribe((data) => {
+        this.regionOptions = data;
+      });
 
-  loadRegion(): void {
-    this.db.getRegion().subscribe((regionList) => {
-      this.regionList = regionList.rows.map(row => ({
-        label: row.regionCode,
-        value: row.regionCode 
-      }));
+      this.db.getCurrencyOptions().subscribe((data) => {
+        this.currencyOptions = data;
+      });
+      //this.loadRegions();
+      //this.rebuildForm();
+      // this.cdr.markForCheck(); // Mark for check
     });
   }
-  loadCurrency(): void {
-    this.db.getCurrency().subscribe((currencyList) => {
-      this.currencyList = currencyList.rows.map(row => ({
-        label: row.currencyCode,
-        value: row.currencyCode 
-      }));
-    });
-  }
-  
 
   createDbCountry() {
     return this.fb.group({
       countryCode: [null, [Validators.required, Validators.maxLength(20)]],
-      countryName: [null, [Validators.required, Validators.maxLength(300)]],
       description: [null, [Validators.maxLength(300)]],
       active: [true],
       region: [null, [Validators.maxLength(20)]],
@@ -119,10 +112,9 @@ export class CountryDetailComponent
   }
 
   createCountryLangForm(valueLang: CountryLang) {
-    const fg = this.fb.group({
+    return this.fb.group({
       countryName: [null, [Validators.required, Validators.maxLength(300)]],
     });
-    return fg;
   }
 
   rebuildForm() {
@@ -141,18 +133,19 @@ export class CountryDetailComponent
     this.dbCountryLangForm = [];
     this.master.langCodes.forEach((lang) => {
       let language = this.country.countryLangs.find(
-        (x) => x.languagecode == lang.value
+        (x) => x.languageCode == lang.value
       );
       if (!language) {
         language = new CountryLang();
-        language.languagecode = lang.value;
-        language.countrycode = this.countryCode;
+        language.languageCode = lang.value;
+        language.countryCode = this.countryCode;
       }
       const langDataSource = new FormDatasource<CountryLang>(
         language,
         this.createCountryLangForm(language)
       );
       this.dbCountryLangForm.push(langDataSource);
+      console.log('langDataSource', langDataSource);
     });
   }
 
@@ -175,6 +168,8 @@ export class CountryDetailComponent
 
     this.dbCountryForm.updateValue();
 
+    console.log('dataSource', DataSource);
+
     this.dbCountryLangForm.forEach((dataSource) => {
       dataSource.updateValue();
     });
@@ -183,6 +178,11 @@ export class CountryDetailComponent
       .filter((source) => !source.isNormal)
       .map((source) => source.model);
     this.country.countryLangs = countryLangs;
+    //this.country.countryName = this.country.countryLangs[0].countryName;
+
+    console.log('country', this.country);
+    //let getcountry = this.db.getCountryByCountryCode(this.country.countryCode);
+    //console.log('getCountryByCountryCode', getcountry);
 
     this.db
       .saveCountry(this.country)
@@ -197,6 +197,17 @@ export class CountryDetailComponent
         this.ms.success('message.STD00006');
       });
   }
+
+  // updateTableData() {
+  //   // Define your pagination and query parameters
+  //   const page = { pageNumber: 1, pageSize: 10 }; // Example pagination parameters
+  //   const query = ''; // Example query string
+
+  //   this.db.getCountries(page, query).subscribe((response) => {
+  //     this.data = response.items; // Assuming response contains items array
+  //     this.cdr.markForCheck(); // Ensure Angular checks for changes
+  //   });
+  // }
 
   public get isDirty() {
     return (
