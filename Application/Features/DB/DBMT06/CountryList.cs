@@ -47,10 +47,13 @@ namespace Application.Features.DB.DBMT06
                 sql.AppendLine("                tl.territory_name as \"territoryName\" ,");
                 sql.AppendLine("                cc.currency_name as \"currencyName\" ");
                 sql.AppendLine("    FROM		db.country ct ");
+
                 sql.AppendLine("    LEFT JOIN        db.country_lang cl ON ct.country_code = cl.country_code AND cl.language_code = 'EN'");
                 sql.AppendLine("    LEFT JOIN        db.territory_lang tl ON ct.territory_code = tl.territory_code");
                 sql.AppendLine("    LEFT JOIN        db.currency_lang cc ON ct.currency_code = cc.currency_code");
-                
+              
+              
+
                 if (!string.IsNullOrWhiteSpace(request.Keyword))
                 {
                     sql.AppendLine("WHERE       CONCAT(LOWER(ct.country_code),LOWER(cl.country_name))");

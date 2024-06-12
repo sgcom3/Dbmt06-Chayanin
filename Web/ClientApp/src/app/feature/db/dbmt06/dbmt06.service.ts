@@ -31,6 +31,11 @@ export class CountryLang extends EntityBase {
   markToEdit: any = null;
 }
 
+export type dropdown = {
+  value: string;
+  label: string;
+}
+
 @Injectable()
 export class Dbmt06Service {
   constructor(private http: HttpClient) {}

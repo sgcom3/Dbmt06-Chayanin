@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SubscriptionDisposer } from '@app/shared/components/subscription-disposer';
-import { Country, CountryLang, Dbmt06Service } from '../dbmt06.service';
+import { Country, CountryLang, Dbmt06Service, dropdown } from '../dbmt06.service';
 import { FormDatasource } from '@app/shared/services/base.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -18,8 +18,7 @@ import { DataSource } from '@angular/cdk/collections';
 })
 export class CountryDetailComponent
   extends SubscriptionDisposer
-  implements OnInit
-{
+  implements OnInit {
   //dbCountryList: Country = { countryLangs: [] } as Country;
   master = { langCodes: [] as any[] };
   dbCountryForm!: FormDatasource<Country>;
@@ -31,7 +30,7 @@ export class CountryDetailComponent
   currencies: any[] = [];
   currencyTemp: any;
   systemControl: any;
-  regionOptions: { label: string; value: string }[] = [];
+  regionOptions: dropdown[] = [];
   currencyOptions: { label: string; value: string }[] = [];
 
   saving = false;
@@ -47,7 +46,6 @@ export class CountryDetailComponent
     private cdr: ChangeDetectorRef
   ) {
     super();
-
     // this.dbCountryForm = new FormDatasource<Country>(
     //   this.Country,
     //   this.createDbCountry()
@@ -209,19 +207,6 @@ export class CountryDetailComponent
   //   });
   // }
 
-  public get isDirty() {
-    return (
-      this.dbCountryForm.form.dirty ||
-      this.dbCountryLangForm.some((source) => source.form.dirty)
-    );
-  }
 
-  canDeactivate(): Observable<boolean> | boolean {
-    if (this.isDirty) {
-      return from(this.modal.confirm('message.STD00002'));
-    }
-    return of(true);
-  }
 
-  cancel() {}
 }

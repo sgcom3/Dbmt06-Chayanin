@@ -12,9 +12,7 @@ import { Dbmt06Service } from '../dbmt06.service';
   styleUrl: './country.component.scss',
 })
 export class CountryComponent implements OnInit {
-  initialPageSort = new PageCriteria(
-    'countryCode,telCountryCode,active,zoneId,currencyCode,trunkPrefix,description,countryImage,territoryCode,interfaceMappingCode,countryName,territoryName,currencyName'
-  );
+  initialPageSort = new PageCriteria();
   keyword: string = '';
   data: PaginatedDataSource<any, any>;
 
@@ -36,7 +34,7 @@ export class CountryComponent implements OnInit {
     this.data.queryBy({ keyword: this.keyword });
   }
 
-  onSearch() {
+  onSearch():void {
     this.data.queryBy({ keyword: this.keyword }, true);
   }
 
@@ -44,7 +42,7 @@ export class CountryComponent implements OnInit {
     this.router.navigate(['/db/dbmt06/detail']);
   }
 
-  remove(code) {
+  remove(code:string) {
     if (code) {
       this.db.deleteCountry(code).subscribe((res: any) => {
         this.ms.success('message.STD00014');
