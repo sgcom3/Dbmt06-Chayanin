@@ -60,7 +60,7 @@ export class Dbmt06Service {
         if (data && data.rows) {
           return data.rows.map((item) => ({
             label: item.territoryName,
-            value: item.territoryName,
+            value: item.territoryCode,
           }));
         }
       })
@@ -74,7 +74,7 @@ export class Dbmt06Service {
         if (data && data.rows) {
           return data.rows.map((item) => ({
             label: item.currencyName,
-            value: item.currencyName,
+            value: item.currencyCode,
           }));
         }
       })
